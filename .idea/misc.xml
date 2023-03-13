@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/badge_bg.xml" value="0.289" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/btnshape.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/btnshapetrans.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/buttonselector.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/buttonselectortransparent.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/creditbtnselector.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/edit_bg.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/savebtnselector.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/drawable/startbtnselector.xml" value="0.35" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_cart.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_config.xml" value="0.33" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_main.xml" value="0.296195652173913" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_payment.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_payment_method.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_product_detail.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_receipt.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_select_product.xml" value="0.33" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/cartitem.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/fragment_receipt.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/menuitem.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/product_detail_layout.xml" value="0.5" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/receiptitem.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/receiptlayout.xml" value="0.365625" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/thankyou.xml" value="0.36666666666666664" />
+        <entry key="..\:/LIS Projects/VendtrixApp/app/src/main/res/layout/thankyou_layout.xml" value="0.365625" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

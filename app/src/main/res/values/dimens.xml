@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="MainHeading">100dp</dimen>
+    <dimen name="SubHeading">80dp</dimen>
+    <dimen name="Heading">60dp</dimen>
+    <dimen name="Normal">45dp</dimen>
+    <dimen name="Samll">35dp</dimen>
+</resources>
