@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix;
+package com.linkitsoft.beepvending;
 
 import org.junit.Test;
 

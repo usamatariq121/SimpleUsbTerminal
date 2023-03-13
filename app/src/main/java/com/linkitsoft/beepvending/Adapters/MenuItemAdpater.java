@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Adapters;
+package com.linkitsoft.beepvending.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.linkitsoft.vendtix.Activities.SelectProduct;
-import com.linkitsoft.vendtix.Models.Product;
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.Activities.SelectProduct;
+import com.linkitsoft.beepvending.Models.Product;
+import com.linkitsoft.beepvending.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -93,6 +94,7 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
         private ImageView selecticon;
         private ImageView prodimage;
         private CardView mainCard;
+        private ConstraintLayout prodCons;
 
         public ViewHolder(@NonNull View itemView) {
 
@@ -105,6 +107,7 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
             selecticon = mView.findViewById(R.id.imageView7);
             prodimage = mView.findViewById(R.id.imageView6);
             mainCard = mView.findViewById(R.id.cardView);
+            prodCons = mView.findViewById(R.id.consProduct);
         }
         public void setdata( String itemname, String itemimage, int qty, double pricee, int pos, Boolean isselected){
 
@@ -113,6 +116,9 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
             position.setText(""+pos);
             if(isselected){
                 selecticon.setVisibility(View.VISIBLE);
+                prodCons.setBackgroundResource(R.drawable.item_border);
+            }else{
+                prodCons.setBackgroundResource(0);
             }
             Picasso.get().load(R.drawable.p5).into(prodimage);
 

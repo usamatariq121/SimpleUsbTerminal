@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Activities;
+package com.linkitsoft.beepvending.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,19 +16,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
-import com.linkitsoft.vendtix.Adapters.ReceiptItemAdapter;
-import com.linkitsoft.vendtix.Models.ReceiptModel;
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.Adapters.ReceiptItemAdapter;
+import com.linkitsoft.beepvending.Models.ReceiptModel;
+import com.linkitsoft.beepvending.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class PaymentMethod extends AppCompatActivity {
-
+public class PaymentActivity extends AppCompatActivity {
 
     //********************************** TIMER **********************************************************
     Boolean isuserpaying = false;
@@ -70,7 +68,7 @@ public class PaymentMethod extends AppCompatActivity {
                                                 sweetAlertDialog.dismissWithAnimation();
                                             } catch (Exception ex) {
                                             }
-                                            Intent intent = new Intent(PaymentMethod.this, MainActivity.class);
+                                            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                                             startActivity(intent);
                                             ct[0].cancel();
                                         }
@@ -85,7 +83,7 @@ public class PaymentMethod extends AppCompatActivity {
                                     }
                                     threadintrupt = true;
                                     ct[0].cancel();
-                                    Intent intent = new Intent(PaymentMethod.this, MainActivity.class);
+                                    Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 }
                             };
@@ -107,7 +105,7 @@ public class PaymentMethod extends AppCompatActivity {
     }
 
     void showsweetalerttimeout(final CountDownTimer[] ct) {
-        sweetAlertDialog = new SweetAlertDialog(PaymentMethod.this, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog = new SweetAlertDialog(PaymentActivity.this, SweetAlertDialog.WARNING_TYPE);
 
         sweetAlertDialog.setTitleText("Press anywhere on screen to continue");
         sweetAlertDialog.setContentText("This session will end in 10");
@@ -126,7 +124,7 @@ public class PaymentMethod extends AppCompatActivity {
                 threadintrupt = true;
                 ct[0].cancel();
                 sweetAlertDialog.dismissWithAnimation();
-                Intent intent = new Intent(PaymentMethod.this, MainActivity.class);
+                Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(intent);
@@ -146,8 +144,6 @@ public class PaymentMethod extends AppCompatActivity {
     //********************************** TIMER **********************************************************
 
     private View core_view;
-    private ImageButton back;
-    private ImageButton btnNayax, btnScanQr;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -166,13 +162,15 @@ public class PaymentMethod extends AppCompatActivity {
     }
 
 
+    ImageButton btnNayax;
+    ImageButton back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment_method);
+        setContentView(R.layout.activity_payment);
 
         core_view = getWindow().getDecorView();
-
         core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
@@ -182,15 +180,13 @@ public class PaymentMethod extends AppCompatActivity {
             }
         });
 
-        back = findViewById(R.id.imageButton8);
-        btnNayax = findViewById(R.id.imageButton9);
-        btnScanQr = findViewById(R.id.imageButton10);
-
         w30 = new wait30();
         w30.start();
         oncreate = true;
 
 
+        btnNayax = findViewById(R.id.imageButton9);
+        back = findViewById(R.id.imageButton8);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,30 +198,73 @@ public class PaymentMethod extends AppCompatActivity {
         btnNayax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PaymentMethod.this, PaymentActivity.class);
-                startActivity(intent);
+                showThankyou();
             }
         });
-
-        btnScanQr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PaymentMethod.this, PaymentActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
     }
 
+    private void showThankyou() {
+        final Dialog thankyouDialog = new Dialog(this);
+        thankyouDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        thankyouDialog.setContentView(R.layout.thankyou_layout);
+        thankyouDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button btnReceipt;
+        btnReceipt = thankyouDialog.findViewById(R.id.button);
 
-    public void showdialog(String title, String content, int type) {
+        btnReceipt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                thankyouDialog.dismiss();
+//                ReceiptFragment receiptFragment = new ReceiptFragment();
+//                receiptFragment.show(getSupportFragmentManager(),"ReceiptFragment");
 
-        final SweetAlertDialog sd = new SweetAlertDialog(this, type)
-                .setTitleText(title)
-                .setContentText(content);
-        sd.show();
+                final Dialog receiptDialog = new Dialog(PaymentActivity.this);
+                receiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                receiptDialog.setContentView(R.layout.receiptlayout);
+                receiptDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                Button btnFinish;
+                RecyclerView receiptRecyclerView;
+                List<ReceiptModel> receiptModelList;
+                ReceiptItemAdapter receiptItemAdapter;
+                btnFinish = receiptDialog.findViewById(R.id.button);
+                receiptRecyclerView = receiptDialog.findViewById(R.id.recyclerView3);
+
+                receiptModelList = new ArrayList<ReceiptModel>();
+                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","1"));
+                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","2"));
+                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","3"));
+                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","4"));
+                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","5"));
+                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","6"));
+                receiptItemAdapter = new ReceiptItemAdapter(receiptModelList,PaymentActivity.this);
+                receiptRecyclerView.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
+                receiptRecyclerView.setAdapter(receiptItemAdapter);
+                receiptRecyclerView.setHasFixedSize(true);
+
+
+
+                btnFinish.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        receiptDialog.dismiss();
+                        Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                        startActivity(intent);
+                    }
+                });
+
+
+                receiptDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                receiptDialog.show();
+
+
+            }
+        });
+
+
+        thankyouDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        thankyouDialog.show();
     }
 
     @Override
@@ -234,7 +273,6 @@ public class PaymentMethod extends AppCompatActivity {
         threadintrupt = true;
         isuserpaying = true;
     }
-
     @Override
     protected void onResume() {
         super.onResume();

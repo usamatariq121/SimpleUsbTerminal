@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="300dp"
+        android:layout_width="320dp"
         android:layout_height="450dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="62dp"
@@ -20,13 +20,16 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/consProduct"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+          >
 
             <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
+                android:visibility="gone"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView4"
@@ -41,6 +44,7 @@
                 android:layout_marginEnd="32dp"
                 android:fontFamily="@font/bold"
                 android:text="$2.00"
+                android:textColor="@color/pricecolor"
                 android:textSize="@dimen/Samll"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -83,7 +87,7 @@
                 android:gravity="center"
                 android:inputType="textMultiLine"
                 android:text="India’s Magic Lays Masala 250 cal"
-                android:textColor="@color/black"
+                android:textColor="@color/graycolor"
                 android:textSize="@dimen/Samll"
                 android:fontFamily="@font/regular"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -95,12 +99,12 @@
 
     <ImageView
         android:id="@+id/imageView7"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginTop="25dp"
         android:elevation="2dp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bluetick" />
+        app:srcCompat="@drawable/bluetick1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

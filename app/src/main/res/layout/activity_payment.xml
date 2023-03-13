@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/checkoutbgg" />
+        app:srcCompat="@drawable/paymentbg" />
 
     <TextView
         android:id="@+id/textView21"
@@ -25,11 +25,13 @@
         android:layout_marginEnd="32dp"
         android:gravity="center"
         android:text="Cashless\nPayment Solution"
-        android:textColor="@color/black"
-        android:textSize="@dimen/SubHeading"
+        android:textColor="@color/graycolor"
+        android:fontFamily="@font/bold"
+        android:textStyle="bold"
+        android:textSize="@dimen/Heading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageButton8"
-        app:layout_constraintTop_toTopOf="@+id/imageButton8" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButton8" />
 
     <ImageButton
         android:id="@+id/imageButton8"

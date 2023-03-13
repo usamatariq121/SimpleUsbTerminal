@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Activities;
+package com.linkitsoft.beepvending.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.R;
 
 public class SplashScreen extends AppCompatActivity {
 

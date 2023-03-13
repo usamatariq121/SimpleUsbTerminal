@@ -13,5 +13,7 @@
     <color name="orange">#F9B03E</color>
     <color name="grey">#777777</color>
     <color name="translucent">#5E3C3939</color>
+    <color name="pricecolor">#0064A7</color>
+    <color name="graycolor">#A9A9A9</color>
 
 </resources>

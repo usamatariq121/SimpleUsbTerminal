@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Adapters;
+package com.linkitsoft.beepvending.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,9 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.linkitsoft.vendtix.Activities.CartActivity;
-import com.linkitsoft.vendtix.Models.Product;
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.Activities.CartActivity;
+import com.linkitsoft.beepvending.Models.Product;
+import com.linkitsoft.beepvending.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

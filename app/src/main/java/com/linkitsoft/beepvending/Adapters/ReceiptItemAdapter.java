@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Adapters;
+package com.linkitsoft.beepvending.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.linkitsoft.vendtix.Models.ReceiptModel;
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.Models.ReceiptModel;
+import com.linkitsoft.beepvending.R;
 
 import java.util.List;
 

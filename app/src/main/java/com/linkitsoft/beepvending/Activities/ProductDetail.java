@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Activities;
+package com.linkitsoft.beepvending.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,10 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.R;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 

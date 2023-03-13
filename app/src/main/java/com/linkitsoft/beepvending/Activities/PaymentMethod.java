@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Activities;
+package com.linkitsoft.beepvending.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,14 +7,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.R;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class ConfigActivity extends AppCompatActivity {
+public class PaymentMethod extends AppCompatActivity {
+
 
     //********************************** TIMER **********************************************************
     Boolean isuserpaying = false;
@@ -56,7 +56,7 @@ public class ConfigActivity extends AppCompatActivity {
                                                 sweetAlertDialog.dismissWithAnimation();
                                             } catch (Exception ex) {
                                             }
-                                            Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
+                                            Intent intent = new Intent(PaymentMethod.this, MainActivity.class);
                                             startActivity(intent);
                                             ct[0].cancel();
                                         }
@@ -71,7 +71,7 @@ public class ConfigActivity extends AppCompatActivity {
                                     }
                                     threadintrupt = true;
                                     ct[0].cancel();
-                                    Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
+                                    Intent intent = new Intent(PaymentMethod.this, MainActivity.class);
                                     startActivity(intent);
                                 }
                             };
@@ -93,7 +93,7 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
     void showsweetalerttimeout(final CountDownTimer[] ct) {
-        sweetAlertDialog = new SweetAlertDialog(ConfigActivity.this, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog = new SweetAlertDialog(PaymentMethod.this, SweetAlertDialog.WARNING_TYPE);
 
         sweetAlertDialog.setTitleText("Press anywhere on screen to continue");
         sweetAlertDialog.setContentText("This session will end in 10");
@@ -112,7 +112,7 @@ public class ConfigActivity extends AppCompatActivity {
                 threadintrupt = true;
                 ct[0].cancel();
                 sweetAlertDialog.dismissWithAnimation();
-                Intent intent = new Intent(ConfigActivity.this, MainActivity.class);
+                Intent intent = new Intent(PaymentMethod.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(intent);
@@ -132,6 +132,9 @@ public class ConfigActivity extends AppCompatActivity {
     //********************************** TIMER **********************************************************
 
     private View core_view;
+    private ImageButton back;
+    private ImageButton btnNayax, btnScanQr;
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -149,16 +152,13 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
 
-    ImageButton save;
-    Button cancel;
-    Button setting;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_config);
+        setContentView(R.layout.activity_payment_method);
 
         core_view = getWindow().getDecorView();
+
         core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
@@ -168,37 +168,43 @@ public class ConfigActivity extends AppCompatActivity {
             }
         });
 
+        back = findViewById(R.id.imageButton8);
+        btnNayax = findViewById(R.id.imageButton9);
+        btnScanQr = findViewById(R.id.imageButton10);
+
         w30 = new wait30();
         w30.start();
         oncreate = true;
 
-        save = findViewById(R.id.imageButton);
-        cancel = findViewById(R.id.button6);
-        setting = findViewById(R.id.button7);
 
 
-        setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(android.provider.Settings.ACTION_SETTINGS), 0);
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
+        btnNayax.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent(PaymentMethod.this, PaymentActivity.class);
+                startActivity(intent);
             }
         });
+
+        btnScanQr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PaymentMethod.this, PaymentActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
 
     }
+
 
     public void showdialog(String title, String content, int type) {
 
@@ -214,6 +220,7 @@ public class ConfigActivity extends AppCompatActivity {
         threadintrupt = true;
         isuserpaying = true;
     }
+
     @Override
     protected void onResume() {
         super.onResume();

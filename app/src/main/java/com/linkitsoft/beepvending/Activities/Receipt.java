@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Activities;
+package com.linkitsoft.beepvending.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 
-import com.linkitsoft.vendtix.Adapters.ReceiptItemAdapter;
-import com.linkitsoft.vendtix.Models.ReceiptModel;
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.Adapters.ReceiptItemAdapter;
+import com.linkitsoft.beepvending.Models.ReceiptModel;
+import com.linkitsoft.beepvending.R;
 
 import java.util.ArrayList;
 import java.util.List;

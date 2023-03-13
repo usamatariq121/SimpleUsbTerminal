@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Activities;
+package com.linkitsoft.beepvending.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ import android.widget.VideoView;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.linkitsoft.vendtix.R;
+import com.linkitsoft.beepvending.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         core_view = getWindow().getDecorView();
         start = findViewById(R.id.imageButton);
         videoImageSlider = findViewById(R.id.videoImageSlider);
-        bannerImageVideo = findViewById(R.id.videoView);
         mainlogo = findViewById(R.id.mainlogo);
 
 
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bannerImageVideo.stopPlayback();
+
                 Intent next = new Intent(MainActivity.this, SelectProduct.class);
                 startActivity(next);
             }
@@ -167,6 +167,14 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 bannerImageVideo.setVideoPath(video_path);
                 bannerImageVideo.start();
+                bannerImageVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+
+                    @Override
+                    public boolean onError(MediaPlayer mp, int what, int extra) {
+                        Log.d("video", "setOnErrorListener ");
+                        return true;
+                    }
+                });
                 bannerImageVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {

@@ -1,4 +1,4 @@
-package com.linkitsoft.vendtix.Models;
+package com.linkitsoft.beepvending.Models;
 
 public class Product {
 
