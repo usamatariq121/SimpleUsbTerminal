@@ -57,13 +57,13 @@
         <ImageView
             android:id="@+id/imageView16"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/bottmcard" />
+            app:srcCompat="@drawable/bottomcards" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -74,6 +74,8 @@
         android:fontFamily="@font/bold"
         android:text="$12.00"
         android:textSize="@dimen/SubHeading"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/cardView5"
         app:layout_constraintStart_toStartOf="@+id/cardView5"
         app:layout_constraintTop_toBottomOf="@+id/cardView5" />
@@ -84,7 +86,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/bold"
         android:text="Amount"
-        android:textColor="@color/grey"
+        android:textColor="@color/white"
         android:textSize="@dimen/SubHeading"
         app:layout_constraintEnd_toEndOf="@+id/textView22"
         app:layout_constraintStart_toStartOf="@+id/textView22"
@@ -111,7 +113,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

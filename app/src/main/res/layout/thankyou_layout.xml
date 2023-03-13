@@ -18,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/receiptbg"
+            android:background="@drawable/recieptbg1"
             android:padding="50dp">
 
             <Button
@@ -28,8 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="52dp"
                 android:layout_marginBottom="32dp"
-                android:background="@drawable/buttonselector"
-                android:backgroundTint="@color/blue"
+                android:background="@drawable/btncheckoutselector"
                 android:padding="30dp"
                 android:paddingStart="50dp"
                 android:paddingEnd="50dp"
@@ -51,6 +50,7 @@
                 android:fontFamily="@font/bold"
                 android:text="$12.00"
                 android:textSize="@dimen/Heading"
+                android:textColor="@color/pricecolor"
                 app:layout_constraintBottom_toTopOf="@+id/textView29"
                 app:layout_constraintEnd_toEndOf="@+id/textView27"
                 app:layout_constraintStart_toStartOf="@+id/textView27"
@@ -63,8 +63,9 @@
                 android:layout_marginBottom="52dp"
                 android:fontFamily="@font/bold"
                 android:text="Amount"
-                android:textColor="@color/grey"
+                android:textColor="@color/graycolor"
                 android:textSize="@dimen/Heading"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/button"
                 app:layout_constraintEnd_toEndOf="@+id/textView28"
                 app:layout_constraintStart_toStartOf="@+id/textView28"
@@ -78,6 +79,7 @@
                 android:fontFamily="@font/bold"
                 android:text="Thank You"
                 android:textSize="@dimen/SubHeading"
+                android:textColor="@color/pricecolor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -91,7 +93,7 @@
                 android:fontFamily="@font/regular"
                 android:gravity="center"
                 android:text="Payment successful!\nYour product has\nbeen dispensed"
-                android:textColor="@color/grey"
+                android:textColor="@color/pricecolor"
                 android:textSize="@dimen/SubHeading"
                 app:layout_constraintBottom_toTopOf="@+id/textView28"
                 app:layout_constraintEnd_toEndOf="parent"
