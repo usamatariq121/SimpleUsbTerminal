@@ -1,5 +1,28 @@
 <resources>
     <string name="app_name">Beep Vending</string>
     <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="kiosk_not_reg">Please register vending first</string>
+    <string name="no_products">Product not available</string>
+    <string name="limit">Limit exceed</string>
+    <string name="limit_msg">This product is out of stock</string>
+    <string name="addtocart_limit_msg">This product is limit exceed</string>
+    <string name="Product_OUT">Product not available</string>
+    <string name="title_yes">YES</string>
+    <string name="title_no">NO</string>
+    <string name="exit_confirmation">Are you sure you want to restart order? </string>
+    <string name="exit_item">Are you sure you want to remove item? </string>
+    <string name="exit_msg">Your cart will be empty</string>
+    <string name="vending_name">VendingMachine?username=</string>
+    <string name="vending_password">&amp;password=</string>
+
+    <string name="error">Error</string>
+    <string name="no_addsavailable"> No Advertisement available</string>
+    <string name="no_addsavailable_detail">No Ads Available Detail</string>
+    <string name="no_videos"> No Video Advertisement available</string>
+    <string name="no_images">No Banner Advertisement available</string>
+    <string name="no_images_detail">No Images Details</string>
+    <string name="no_videos_detail">No Videos Details</string>
+
 </resources>

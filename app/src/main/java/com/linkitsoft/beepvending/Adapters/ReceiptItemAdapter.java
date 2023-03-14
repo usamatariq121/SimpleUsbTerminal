@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.linkitsoft.beepvending.Models.Product;
 import com.linkitsoft.beepvending.Models.ReceiptModel;
 import com.linkitsoft.beepvending.R;
 
@@ -16,10 +17,10 @@ import java.util.List;
 
 public class ReceiptItemAdapter extends RecyclerView.Adapter<ReceiptItemAdapter.ViewHolder> {
 
-    public List<ReceiptModel> receiptList;
+    public List<Product> receiptList;
     public Context context;
 
-    public ReceiptItemAdapter(List<ReceiptModel> receiptList, Context context) {
+    public ReceiptItemAdapter(List<Product> receiptList, Context context) {
         this.receiptList = receiptList;
         this.context = context;
     }
@@ -36,13 +37,12 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<ReceiptItemAdapter.
     @Override
     public void onBindViewHolder(@NonNull ReceiptItemAdapter.ViewHolder holder, int position) {
         holder.setIsRecyclable(false);
-        String name = receiptList.get(position).getProductName();
-        String calories = receiptList.get(position).getProdCal();
-        String price = receiptList.get(position).getTotalPrice();
-        String index = receiptList.get(position).getIndexNo();
-        String quantity = receiptList.get(position).getQuantity();
+        String name = receiptList.get(position).getItemname();
+        double price = receiptList.get(position).getPrice();
+        int quantity = receiptList.get(position).getQty();
+        int index = receiptList.get(position).getPosition();
 
-        holder.setData(name,calories,price,index,quantity);
+        holder.setData(name,"250 Cal",price,index,quantity);
 
 
     }
@@ -65,12 +65,12 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<ReceiptItemAdapter.
             tvCalories = mView.findViewById(R.id.textView11);
         }
 
-        public void setData(String name, String calories, String price, String index, String quantity) {
+        public void setData(String name, String calories, double price, int index, int quantity) {
             tvDescription.setText(name);
-            tvIndex.setText(index);
-            tvQuantity.setText(quantity);
+            tvIndex.setText(index+"");
+            tvQuantity.setText(quantity+"");
             tvCalories.setText(calories);
-            tvPrice.setText(price);
+            tvPrice.setText("$ "+String.format("%,.2f", price));
         }
     }
 }

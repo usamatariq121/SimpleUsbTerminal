@@ -22,8 +22,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linkitsoft.beepvending.Adapters.MenuItemAdpater;
+import com.linkitsoft.beepvending.Helper.UIHelper;
 import com.linkitsoft.beepvending.Models.Product;
 import com.linkitsoft.beepvending.R;
+import com.linkitsoft.beepvending.Utils.LocalDataManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,6 +181,16 @@ public class SelectProduct extends AppCompatActivity {
     TextView tvQuantity;
 
 
+    View core_views;
+
+    int prodQuantityCount = 1;
+    double amount = 0;
+    int count = 0;
+    public double totalPrices = 0.0;
+
+
+    public static ArrayList<Product> cartList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,6 +222,8 @@ public class SelectProduct extends AppCompatActivity {
         imgCart = findViewById(R.id.cart);
         tvQuantity = findViewById(R.id.cartQuantity);
 
+        cartList = new ArrayList<>();
+
 
 
 
@@ -238,18 +253,11 @@ public class SelectProduct extends AppCompatActivity {
 
         productList = new ArrayList<Product>();
 
-        productList.add(new Product("test", 1, false, 1, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 2, "Heat Beat lays Barbecue 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 3, "Lays Classic ver Family Pack 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 4, "Hot Cup Tomyum 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 5, "Snikers Medium Pack 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 6, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 7, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 8, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 9, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 10, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 11, "India’s Magic Lays Masala 250 cal", 3.98));
-        productList.add(new Product("test", 1, false, 12, "India’s Magic Lays Masala 250 cal", 3.98));
+        productList.add(new Product("test", 1, false, 1, "India’s Magic Lays Masala 250 cal", 3.98,R.drawable.prod1));
+        productList.add(new Product("test", 1, false, 2, "Heat Beat lays Barbecue 250 cal", 3.21,R.drawable.p5));
+        productList.add(new Product("test", 1, false, 3, "Lays Classic ver Family Pack 250 cal", 2.98,R.drawable.p6));
+        productList.add(new Product("test", 1, false, 4, "Hot Cup Tomyum 250 cal", 1.98,R.drawable.p7));
+
 
         menuItemAdpater = new MenuItemAdpater(productList, SelectProduct.this);
         menuItemAdpater.setOnItemClickListener(onCartItemClickListener);
@@ -262,36 +270,109 @@ public class SelectProduct extends AppCompatActivity {
 
 
     private MenuItemAdpater.OnItemClickListener onCartItemClickListener = new MenuItemAdpater.OnItemClickListener() {
+
         @Override
-        public void onAddToCart(View view, int position, long id) {
+        public void onAddToCart(View view, int position, long id, int prodQuantity, double itemprice, String itemname, int image, int pos) {
             Log.d("ajayLis", "added to cart");
             ImageView itemAdded = view.findViewById(R.id.imageView7);
-            showProductDetail(itemAdded, position);
-
+            showProductDetail(itemAdded, position, prodQuantity ,itemprice , itemname,image);
         }
     };
 
-    private void showProductDetail(ImageView addedImage, int position) {
+    private void showProductDetail(ImageView addedImage, int position , int prodQuantity , double price , String itemname,int image) {
         final Dialog productDialog = new Dialog(this);
         productDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         productDialog.setContentView(R.layout.product_detail_layout);
+        productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        core_views = productDialog.getWindow().getDecorView();
+
         productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#5E3C3939")));
         Button addToCart, close;
+        ImageButton btnPlus;
+        TextView tvTotalProduct;
+        ImageButton btnMinus;
+        ImageView imgProd;
+        TextView Ingredient;
+        TextView Description;
+        TextView tvProdPrice;
+        TextView tvProdName;
+        imgProd = productDialog.findViewById(R.id.imageView8);
         addToCart = productDialog.findViewById(R.id.imageButton3);
         close = productDialog.findViewById(R.id.imageButton2);
+        btnPlus = productDialog.findViewById(R.id.imageButton4);
+        btnMinus = productDialog.findViewById(R.id.imageButton5);
+        tvTotalProduct = productDialog.findViewById(R.id.textView8);
+        tvProdName = productDialog.findViewById(R.id.textView6);
+        tvProdPrice = productDialog.findViewById(R.id.textView7);
+//        Ingredient = productDialog.findViewById(R.id.textView20);
+//        Description = productDialog.findViewById(R.id.textView31);
 
+
+
+        Picasso.get().load(image).into(imgProd);
+        tvProdName.setText(itemname);
+        tvProdPrice.setText("$" + String.format("%,.2f", price) + "");
+//        Ingredient.setText(ing);
+//        Description.setText(des);
+
+
+        prodQuantityCount = 1;
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 productDialog.cancel();
                 productList.get(position).setIsselected(true);
 
+
+                amount = 0;
+                amount = prodQuantityCount * price;
+
                 menuItemAdpater.notifyDataSetChanged();
                 bottom.setVisibility(View.VISIBLE);
+                count = count + prodQuantityCount;
+                tvQuantity.setText(count + "");
 
                 imgCart.setVisibility(View.VISIBLE);
                 tvQuantity.setVisibility(View.VISIBLE);
 
+                cartList.add(new Product(price,itemname,image,prodQuantityCount,position));
+
+                totalPrices = amount + totalPrices;
+                LocalDataManager.getInstance().putDouble("TotalPrice", totalPrices);
+
+
+                totalamt.setText("$"+String.format("%,.2f", totalPrices));
+
+            }
+        });
+
+
+        btnPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                prodQuantityCount++;
+                if (prodQuantityCount > 0) {
+                        tvTotalProduct.setText("" + prodQuantityCount);
+                    } else {
+                        prodQuantityCount++;
+                        tvTotalProduct.setText("" + prodQuantityCount);
+                    }
+            }
+        });
+
+
+        btnMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                prodQuantityCount--;
+                if (prodQuantityCount > 0) {
+                    tvTotalProduct.setText("" + prodQuantityCount);
+                } else {
+                    prodQuantityCount = 1;
+                    productDialog.dismiss();
+                }
             }
         });
 
@@ -305,6 +386,8 @@ public class SelectProduct extends AppCompatActivity {
 
         productDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         productDialog.show();
+        productDialog.setCancelable(false);
+        core_views.setSystemUiVisibility(hide_system_bars());
     }
 
     public void showdialog(String title, String content, int type) {

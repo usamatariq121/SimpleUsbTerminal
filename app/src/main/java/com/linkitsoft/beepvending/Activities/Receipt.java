@@ -1,5 +1,7 @@
 package com.linkitsoft.beepvending.Activities;
 
+import static com.linkitsoft.beepvending.Activities.SelectProduct.cartList;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -175,14 +177,8 @@ public class Receipt extends AppCompatActivity {
 
         receiptRecyclerView = findViewById(R.id.recyclerView3);
 
-        receiptModelList = new ArrayList<ReceiptModel>();
-        receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250","1","3.25","1"));
-        receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250","1","3.25","2"));
-        receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250","1","3.25","3"));
-        receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250","1","3.25","4"));
-        receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250","1","3.25","5"));
-        receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250","1","3.25","6"));
-        receiptItemAdapter = new ReceiptItemAdapter(receiptModelList,Receipt.this);
+
+        receiptItemAdapter = new ReceiptItemAdapter(cartList,Receipt.this);
         receiptRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         receiptRecyclerView.setAdapter(receiptItemAdapter);
         receiptRecyclerView.setHasFixedSize(true);

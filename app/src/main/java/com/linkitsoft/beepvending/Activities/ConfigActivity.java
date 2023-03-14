@@ -149,7 +149,7 @@ public class ConfigActivity extends AppCompatActivity {
     }
 
 
-    ImageButton save;
+    Button save;
     Button cancel;
     Button setting;
 

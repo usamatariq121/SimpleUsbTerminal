@@ -5,13 +5,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -20,7 +27,9 @@ import android.widget.VideoView;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
+import com.linkitsoft.beepvending.Helper.UIHelper;
 import com.linkitsoft.beepvending.R;
+import com.linkitsoft.beepvending.Utils.LocalDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     VideoView bannerImageVideo;
     ImageView mainlogo;
     int count = 0;
+
+    Button btnSubmit, btnCancel;
+    EditText etPin;
+    String pin = "9856";
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -64,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         videoImageSlider = findViewById(R.id.videoImageSlider);
         mainlogo = findViewById(R.id.mainlogo);
 
-
+        LocalDataManager.createInstance(this);
 
 //        **************************************Storage Permission**************************************************************
         if (ContextCompat.checkSelfPermission(MainActivity.this,
@@ -104,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         imageList.add(new SlideModel(R.drawable.banner, ScaleTypes.FIT));
 
         videoImageSlider.setImageList(imageList);
-        videoPlay();
+//        videoPlay();
 
 
         mainlogo.setOnClickListener(new View.OnClickListener() {
@@ -112,9 +125,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(count ==7)
                 {
-                    bannerImageVideo.stopPlayback();
-                    Intent next = new Intent(MainActivity.this, ConfigActivity.class);
-                    startActivity(next);
+                    showPinDialog();
                     count =0;
                 }
                 else
@@ -187,11 +198,54 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void showPinDialog() {
 
+        final Dialog pinDialog = new Dialog(this);
+        pinDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        pinDialog.setContentView(R.layout.pin_popup);
+        pinDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        etPin = pinDialog.findViewById(R.id.pass);
+        btnSubmit = pinDialog.findViewById(R.id.button7);
+        btnCancel = pinDialog.findViewById(R.id.button6);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pinDialog.dismiss();
+            }
+        });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (etPin.getText().toString().length() > 0 && !etPin.getText().toString().equals("")){
+                    if (etPin.getText().toString().equals(pin)){
+                        pinDialog.dismiss();
+                        Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+//                        finish();
+                    }else {
+                        UIHelper.showErrorDialog(MainActivity.this,getString(R.string.error),"Invalid pin",1);
+                    }
+                }else {
+                    UIHelper.showErrorDialog(MainActivity.this,getString(R.string.error),"Pin is required",1);
+                }
+            }
+        });
+
+
+        pinDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        pinDialog.setCancelable(false);
+        pinDialog.show();
+
+
+    }
 
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        videoPlay();
+       // videoPlay();
     }
 }

@@ -6,4 +6,5 @@
     <dimen name="Normal">45dp</dimen>
     <dimen name="Normal1">40dp</dimen>
     <dimen name="Samll">35dp</dimen>
+    <dimen name="Samll1">30dp</dimen>
 </resources>

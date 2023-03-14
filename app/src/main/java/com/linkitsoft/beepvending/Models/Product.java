@@ -8,18 +8,39 @@ public class Product {
     public int position;
     public String itemname;
     public double price;
+    public  int prodImg;
     public int isAdded;
+
 
     public Product() {
     }
 
-    public Product(String image, int qty, Boolean isselected, int position, String itemname, double price) {
+    public Product(String image, int qty, Boolean isselected, int position, String itemname, double price , int prodImg) {
         this.image = image;
         this.qty = qty;
         this.isselected = isselected;
         this.position = position;
         this.itemname = itemname;
         this.price = price;
+        this.prodImg = prodImg;
+    }
+
+
+
+    public Product(double price, String itemname, int image, int prodQuantityCount, int position) {
+        this.prodImg = image;
+        this.price = price;
+        this.itemname = itemname;
+        this.qty = prodQuantityCount;
+        this.position = position;
+    }
+
+    public int getProdImg() {
+        return prodImg;
+    }
+
+    public void setProdImg(int prodImg) {
+        this.prodImg = prodImg;
     }
 
 

@@ -1,5 +1,7 @@
 package com.linkitsoft.beepvending.Activities;
 
+import static com.linkitsoft.beepvending.Activities.SelectProduct.cartList;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,15 +11,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.linkitsoft.beepvending.Adapters.CartItemAdapter;
+import com.linkitsoft.beepvending.Helper.ActivityRequest;
+import com.linkitsoft.beepvending.Helper.CommonUtils;
 import com.linkitsoft.beepvending.Models.Product;
 import com.linkitsoft.beepvending.R;
+import com.linkitsoft.beepvending.Utils.LocalDataManager;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,6 +175,17 @@ public class CartActivity extends AppCompatActivity {
     Button checkout;
     TextView totalamt;
     CartItemAdapter cartItemAdapter;
+    private int prodQuantity = 0;
+    Double totalPrice=0.00;
+
+    double totalAmount = 0;
+
+
+
+    double finalTotalAmount = 0;
+    double taxAmount = 0.0;
+    int totalItems = 0;
+    TextView tvTotalAmount, tvCartTotal, tvTotalItems, tvCartTotalAfterTax, tvTaxAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,6 +211,13 @@ public class CartActivity extends AppCompatActivity {
         back = findViewById(R.id.imageButton6);
         checkout = findViewById(R.id.button6);
         totalamt = findViewById(R.id.textView19);
+        tvCartTotal = findViewById(R.id.textView15);
+        tvTotalAmount = findViewById(R.id.textView12);
+        tvCartTotalAfterTax = findViewById(R.id.textView19);
+        tvTotalItems = findViewById(R.id.textView10);
+        tvTaxAmount = findViewById(R.id.textView16);
+
+
 
         checkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,27 +234,165 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        productList = new ArrayList<Product>();
 
-        productList.add(new Product("test",1,false,1,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,2,"Heat Beat lays Barbecue 250 cal",3.98));
-        productList.add(new Product("test",1,false,3,"Lays Classic ver Family Pack 250 cal",3.98));
-        productList.add(new Product("test",1,false,4,"Hot Cup Tomyum 250 cal",3.98));
-        productList.add(new Product("test",1,false,5,"Snikers Medium Pack 250 cal",3.98));
-        productList.add(new Product("test",1,false,6,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,7,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,8,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,9,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,10,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,11,"India’s Magic Lays Masala 250 cal",3.98));
-        productList.add(new Product("test",1,false,12,"India’s Magic Lays Masala 250 cal",3.98));
+        if(cartList!=null){
+            cartItemAdapter = new CartItemAdapter(cartList,this);
+            cartItemAdapter.setOnItemClickListener(onItemClickListener);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(cartItemAdapter);
+            recyclerView.setHasFixedSize(true);
+        }
 
-        cartItemAdapter = new CartItemAdapter(productList,this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        recyclerView.setAdapter(cartItemAdapter);
-        recyclerView.setHasFixedSize(true);
+
+        Double totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+
+        tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        totalPrice = totalPrice + 1.00;
+        totalamt.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+
     }
+
+
+    private CartItemAdapter.OnItemClickListener onItemClickListener = new CartItemAdapter.OnItemClickListener() {
+        @Override
+        public void onPlusClick(View view, int position, long id, double price, int quantity , CartItemAdapter.ViewHolder viewHolder) {
+
+
+            prodQuantity = cartList.get(position).getQty() + 1;
+            cartList.get(position).setQty(prodQuantity);
+            cartList.get(position).setPrice(price);
+            cartList.get(position).setQty(prodQuantity);
+            cartList.get(position).setPrice(price);
+            totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+            totalPrice = price+totalPrice;
+            cartItemAdapter.notifyDataSetChanged();
+
+
+
+            LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
+            showAmounts(totalItems, totalPrice, finalTotalAmount);
+
+        }
+
+        @Override
+        public void onMinusClick(View view, int position, long id, double price, int quantity,CartItemAdapter.ViewHolder viewHolder) {
+
+
+            prodQuantity = cartList.get(position).getQty() - 1;
+            if(prodQuantity>=1){
+                totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+                Log.d("usama1" , String.valueOf(totalPrice));
+                totalPrice = totalPrice-price;
+                totalItems = totalItems - 1;
+
+                LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
+
+                cartList.get(position).setQty(prodQuantity);
+                Double pr = price*prodQuantity;
+                Log.d("usama" , String.valueOf(totalPrice));
+
+                cartList.get(position).setQty(prodQuantity);
+                cartList.get(position).setPrice(price);
+
+                showAmounts(totalItems, totalPrice, finalTotalAmount);
+                cartItemAdapter.notifyDataSetChanged();
+
+
+            }else{
+
+
+                totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+                cartList.remove(position);
+                totalPrice = totalPrice-price;
+                LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
+                showAmounts(totalItems, totalPrice, finalTotalAmount);
+                cartItemAdapter.notifyItemRemoved(position);
+                cartItemAdapter.notifyItemRangeChanged(position, cartList.size());
+                cartItemAdapter.notifyDataSetChanged();
+            }
+
+            if(cartList.size()==0){
+                cartList = new ArrayList<>();
+                Intent intent = new Intent();
+                intent.putExtra("totalAmountAC", 0.0);
+                intent.putExtra("totalItemAC", 0);
+                setResult(ActivityRequest.REQUEST_ADD_TO_CART, intent);
+                Intent i = new Intent(CartActivity.this,SelectProduct.class);
+                startActivity(i);
+            }
+
+
+                // finish();
+
+
+
+
+
+        }
+
+        @Override
+        public void onRemoveClick(View view, int position, long id, double price, int quantity,CartItemAdapter.ViewHolder viewHolder) {
+
+
+
+
+            cartList.remove(position);
+
+            totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+            price = price * quantity;
+            totalPrice = totalPrice-price;
+            LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
+            totalItems = totalItems - quantity;
+            showAmounts(totalItems, totalPrice, finalTotalAmount);
+
+            cartItemAdapter.notifyItemRemoved(position);
+            cartItemAdapter.notifyItemRangeChanged(position, cartList.size());
+
+            if(cartList.size()==0){
+                totalItems =0;
+                totalAmount = 0.00;
+                finalTotalAmount = 0.00;
+                LocalDataManager.getInstance().putDouble("TotalAmount",0.00);
+                showAmounts( totalAmount, finalTotalAmount);
+                Intent i = new Intent(CartActivity.this,SelectProduct.class);
+                startActivity(i);
+                cartList = new ArrayList<>();
+
+            }
+            cartItemAdapter.notifyDataSetChanged();
+
+
+
+
+
+
+        }
+
+    };
+
+
+    private void showAmounts(double totalPrice, double finalTotalPrice) {
+
+        tvTotalAmount.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
+        tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        totalPrice = totalPrice + 1.00;
+        tvCartTotalAfterTax.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+
+    }
+
+
+
+    private void showAmounts(int qty, double totalPrice, double finalTotalPrice) {
+
+        tvTotalAmount.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
+        tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
+        totalPrice = totalPrice + 1.00;
+        tvCartTotalAfterTax.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+    }
+
+
     public void showdialog(String title, String content, int type) {
 
         final SweetAlertDialog sd = new SweetAlertDialog(this, type)

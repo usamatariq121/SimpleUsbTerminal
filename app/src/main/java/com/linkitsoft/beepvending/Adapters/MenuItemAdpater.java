@@ -52,12 +52,13 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
         holder.setIsRecyclable(false);
 
 
-        String image = productList.get(position).getImage();
+        //String image = productList.get(position).getImage();
         String itemname = productList.get(position).getItemname();
         double itemprice = productList.get(position).getPrice();
         int qty = productList.get(position).getQty();
         int pos = productList.get(position).getPosition();
         Boolean isselected = productList.get(position).getIsselected();
+        int image = productList.get(position).getProdImg();
 
         holder.setdata(itemname,image,qty,itemprice,pos,isselected);
 
@@ -67,8 +68,7 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
              oc = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onAddToCart(view,position,view.getId());
-
+                    onItemClickListener.onAddToCart(view,position,view.getId(),qty,itemprice,itemname , image, pos);
                 }
             };
         }
@@ -109,7 +109,7 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
             mainCard = mView.findViewById(R.id.cardView);
             prodCons = mView.findViewById(R.id.consProduct);
         }
-        public void setdata( String itemname, String itemimage, int qty, double pricee, int pos, Boolean isselected){
+        public void setdata( String itemname, int itemimage, int qty, double pricee, int pos, Boolean isselected){
 
             name.setText(itemname);
             price.setText("$"+pricee);
@@ -120,12 +120,12 @@ public class MenuItemAdpater extends RecyclerView.Adapter<MenuItemAdpater.ViewHo
             }else{
                 prodCons.setBackgroundResource(0);
             }
-            Picasso.get().load(R.drawable.p5).into(prodimage);
+            Picasso.get().load(itemimage).into(prodimage);
 
         }
     }
 
     public interface OnItemClickListener{
-        public void onAddToCart(View view, int position, long id);
+        public void onAddToCart(View view, int position, long id , int prodQuantity , double itemprice , String itemname , int image , int pos);
     }
 }

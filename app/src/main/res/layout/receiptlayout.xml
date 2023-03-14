@@ -11,9 +11,9 @@
         android:id="@+id/cardView7"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="200dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="100dp"
         android:layout_marginBottom="200dp"
         app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +24,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="50dp">
+            android:padding="20dp">
 
             <Button
                 android:id="@+id/button"
@@ -32,47 +32,46 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:background="@drawable/buttonselector"
-                android:backgroundTint="@color/blue"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/btncheckoutselector"
+                android:fontFamily="@font/regular"
                 android:padding="30dp"
                 android:paddingStart="100dp"
                 android:paddingEnd="100dp"
                 android:text="FINISH"
                 android:textAllCaps="true"
                 android:textColor="#fff"
-                android:fontFamily="@font/regular"
                 android:textSize="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView29" />
+                app:layout_constraintTop_toBottomOf="@+id/textView28" />
 
             <TextView
                 android:id="@+id/textView28"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="8dp"
                 android:fontFamily="@font/bold"
                 android:text="$12.00"
+                android:textColor="@color/pricecolor"
                 android:textSize="@dimen/Heading"
-                app:layout_constraintEnd_toEndOf="@+id/textView27"
-                app:layout_constraintStart_toStartOf="@+id/textView27"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView3" />
+                app:layout_constraintEnd_toEndOf="@+id/textView29"
+                app:layout_constraintStart_toStartOf="@+id/textView29"
+                app:layout_constraintTop_toBottomOf="@+id/textView29" />
 
             <TextView
                 android:id="@+id/textView29"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:layout_marginBottom="32dp"
                 android:fontFamily="@font/regular"
                 android:text="Total Amount"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/Heading"
-                app:layout_constraintBottom_toTopOf="@+id/button"
-                app:layout_constraintEnd_toEndOf="@+id/textView28"
-                app:layout_constraintStart_toStartOf="@+id/textView28"
-                app:layout_constraintTop_toBottomOf="@+id/textView28" />
+                app:layout_constraintEnd_toEndOf="@+id/recyclerView3"
+                app:layout_constraintStart_toStartOf="@+id/recyclerView3"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView3" />
 
             <TextView
                 android:id="@+id/textView26"
@@ -83,7 +82,8 @@
                 android:textColor="@color/grey"
                 android:textSize="@dimen/Normal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView12" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView27"
@@ -95,30 +95,23 @@
                 android:fontFamily="@font/bold"
                 android:gravity="center"
                 android:text="Cart:"
-                android:textColor="@color/blue"
+                android:textColor="@color/pricecolor"
                 android:textSize="@dimen/MainHeading"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView30" />
 
-            <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="300dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="32dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/nayax" />
 
             <TextView
                 android:id="@+id/textView30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="vend0f-113"
                 android:fontFamily="@font/regular"
+                android:text="beep0f-113"
                 android:textColor="@color/grey"
                 app:layout_constraintEnd_toEndOf="@+id/textView26"
+                app:layout_constraintStart_toStartOf="@+id/textView26"
                 app:layout_constraintTop_toBottomOf="@+id/textView26" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -126,8 +119,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/textView28"
+                app:layout_constraintBottom_toTopOf="@+id/textView29"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView27" />

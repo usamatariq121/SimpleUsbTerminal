@@ -1,5 +1,7 @@
 package com.linkitsoft.beepvending.Activities;
 
+import static com.linkitsoft.beepvending.Activities.SelectProduct.cartList;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,12 +18,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.linkitsoft.beepvending.Adapters.ReceiptItemAdapter;
+import com.linkitsoft.beepvending.Helper.CommonUtils;
 import com.linkitsoft.beepvending.Models.ReceiptModel;
 import com.linkitsoft.beepvending.R;
+import com.linkitsoft.beepvending.Utils.LocalDataManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -164,6 +171,8 @@ public class PaymentActivity extends AppCompatActivity {
 
     ImageButton btnNayax;
     ImageButton back;
+    TextView totalam;
+    Double totalPrice ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +196,12 @@ public class PaymentActivity extends AppCompatActivity {
 
         btnNayax = findViewById(R.id.imageButton9);
         back = findViewById(R.id.imageButton8);
+        totalam= findViewById(R.id.textView22);
+
+        totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+        totalam.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
+
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,9 +222,16 @@ public class PaymentActivity extends AppCompatActivity {
         final Dialog thankyouDialog = new Dialog(this);
         thankyouDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         thankyouDialog.setContentView(R.layout.thankyou_layout);
+        core_view = thankyouDialog.getWindow().getDecorView();
+
         thankyouDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button btnReceipt;
+        TextView thankyoutotal;
         btnReceipt = thankyouDialog.findViewById(R.id.button);
+        thankyoutotal = thankyouDialog.findViewById(R.id.textView28);
+
+
+        thankyoutotal.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
 
         btnReceipt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,22 +243,33 @@ public class PaymentActivity extends AppCompatActivity {
                 final Dialog receiptDialog = new Dialog(PaymentActivity.this);
                 receiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 receiptDialog.setContentView(R.layout.receiptlayout);
+                core_view = receiptDialog.getWindow().getDecorView();
                 receiptDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 Button btnFinish;
                 RecyclerView receiptRecyclerView;
                 List<ReceiptModel> receiptModelList;
+                TextView cartTotal;
+                TextView DateTime;
                 ReceiptItemAdapter receiptItemAdapter;
                 btnFinish = receiptDialog.findViewById(R.id.button);
-                receiptRecyclerView = receiptDialog.findViewById(R.id.recyclerView3);
+                DateTime = receiptDialog.findViewById(R.id.textView26);
+                cartTotal = receiptDialog.findViewById(R.id.textView28);
 
-                receiptModelList = new ArrayList<ReceiptModel>();
-                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","1"));
-                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","2"));
-                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","3"));
-                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","4"));
-                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","5"));
-                receiptModelList.add(new ReceiptModel("M&MS peanut chocolate candies","250 cal","1","$3.25","6"));
-                receiptItemAdapter = new ReceiptItemAdapter(receiptModelList,PaymentActivity.this);
+
+                receiptRecyclerView = receiptDialog.findViewById(R.id.recyclerView3);
+                Date d = new Date();
+                String pattern = "dd-MM-yyyy";
+                String dateInString =new SimpleDateFormat(pattern).format(new Date());
+                SimpleDateFormat dateFormatprev1 = new SimpleDateFormat("hh:mm:ss aa");
+                String currentTime = dateFormatprev1.format(d.getTime());
+                DateTime.setText(dateInString+"/"+currentTime);
+
+                totalPrice = totalPrice;
+                cartTotal.setText("$"+CommonUtils.formatTwoDecimal(totalPrice)+"");
+
+
+
+                receiptItemAdapter = new ReceiptItemAdapter(cartList,PaymentActivity.this);
                 receiptRecyclerView.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
                 receiptRecyclerView.setAdapter(receiptItemAdapter);
                 receiptRecyclerView.setHasFixedSize(true);
@@ -249,7 +282,7 @@ public class PaymentActivity extends AppCompatActivity {
                         receiptDialog.dismiss();
                         Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
+                        cartList = new ArrayList<>();
                         startActivity(intent);
                     }
                 });
@@ -257,6 +290,8 @@ public class PaymentActivity extends AppCompatActivity {
 
                 receiptDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
                 receiptDialog.show();
+                receiptDialog.setCancelable(false);
+                core_view.setSystemUiVisibility(hide_system_bars());
 
 
             }
@@ -265,6 +300,8 @@ public class PaymentActivity extends AppCompatActivity {
 
         thankyouDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         thankyouDialog.show();
+        thankyouDialog.setCancelable(false);
+        core_view.setSystemUiVisibility(hide_system_bars());
     }
 
     @Override
