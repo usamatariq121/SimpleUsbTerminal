@@ -253,10 +253,10 @@ public class SelectProduct extends AppCompatActivity {
 
         productList = new ArrayList<Product>();
 
-        productList.add(new Product("test", 1, false, 1, "India’s Magic Lays Masala 250 cal", 3.98,R.drawable.prod1));
-        productList.add(new Product("test", 1, false, 2, "Heat Beat lays Barbecue 250 cal", 3.21,R.drawable.p5));
-        productList.add(new Product("test", 1, false, 3, "Lays Classic ver Family Pack 250 cal", 2.98,R.drawable.p6));
-        productList.add(new Product("test", 1, false, 4, "Hot Cup Tomyum 250 cal", 1.98,R.drawable.p7));
+        productList.add(new Product("test", 1, false, 1, "India’s Magic Lays", 3.98,R.drawable.prod1));
+        productList.add(new Product("test", 1, false, 2, "Heat Beat lays", 3.21,R.drawable.p5));
+        productList.add(new Product("test", 1, false, 3, "Lays Classic ver ", 2.98,R.drawable.p6));
+        productList.add(new Product("test", 1, false, 4, "Hot Cup Tomyum ", 1.98,R.drawable.p7));
 
 
         menuItemAdpater = new MenuItemAdpater(productList, SelectProduct.this);

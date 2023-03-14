@@ -15,5 +15,7 @@
     <color name="translucent">#5E3C3939</color>
     <color name="pricecolor">#0064A7</color>
     <color name="graycolor">#A9A9A9</color>
+    <color name="graycolors">#382633</color>
+    <color name="lightgray">#554348</color>
 
 </resources>

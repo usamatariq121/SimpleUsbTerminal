@@ -87,7 +87,7 @@
                 android:gravity="center"
                 android:inputType="textMultiLine"
                 android:text="India’s Magic Lays Masala 250 cal"
-                android:textColor="@color/graycolor"
+                android:textColor="@color/lightgray"
                 android:textSize="@dimen/Samll1"
                 android:fontFamily="@font/regular"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -68,7 +68,7 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<ReceiptItemAdapter.
         public void setData(String name, String calories, double price, int index, int quantity) {
             tvDescription.setText(name);
             tvIndex.setText(index+"");
-            tvQuantity.setText(quantity+"");
+            tvQuantity.setText("x"+quantity+"");
             tvCalories.setText(calories);
             tvPrice.setText("$ "+String.format("%,.2f", price));
         }

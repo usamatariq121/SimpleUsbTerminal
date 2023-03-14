@@ -13,6 +13,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -222,13 +225,22 @@ public class PaymentActivity extends AppCompatActivity {
         final Dialog thankyouDialog = new Dialog(this);
         thankyouDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         thankyouDialog.setContentView(R.layout.thankyou_layout);
-        core_view = thankyouDialog.getWindow().getDecorView();
+        View core_view = thankyouDialog.getWindow().getDecorView();
 
         thankyouDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button btnReceipt;
         TextView thankyoutotal;
+        TextView msgPaymentsuccess;
         btnReceipt = thankyouDialog.findViewById(R.id.button);
+        msgPaymentsuccess = thankyouDialog.findViewById(R.id.textView27);
         thankyoutotal = thankyouDialog.findViewById(R.id.textView28);
+
+
+
+        Spannable wordtoSpan = new SpannableString(msgPaymentsuccess.getText().toString());
+        wordtoSpan.setSpan(new ForegroundColorSpan(Color.parseColor("#382633")), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msgPaymentsuccess.setText(wordtoSpan);
+
 
 
         thankyoutotal.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
@@ -243,7 +255,7 @@ public class PaymentActivity extends AppCompatActivity {
                 final Dialog receiptDialog = new Dialog(PaymentActivity.this);
                 receiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 receiptDialog.setContentView(R.layout.receiptlayout);
-                core_view = receiptDialog.getWindow().getDecorView();
+                View  core_view = receiptDialog.getWindow().getDecorView();
                 receiptDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 Button btnFinish;
                 RecyclerView receiptRecyclerView;

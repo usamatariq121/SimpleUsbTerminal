@@ -26,11 +26,11 @@
             <ImageView
                 android:id="@+id/imageView8"
                 android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="12dp"
-
                 android:src="@drawable/p6"
+                android:scaleType="fitCenter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textView6"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
                 android:layout_marginTop="10dp"
                 android:inputType="textMultiLine"
                 android:text="MnM's Peanut Chocolate Candies 250 cal"
-                android:textColor="@color/grey"
+                android:textColor="@color/graycolors"
                 android:fontFamily="@font/regular"
                 android:textSize="@dimen/Normal1"
                 app:layout_constraintEnd_toStartOf="@+id/imageButton7"
@@ -68,18 +68,17 @@
                 android:id="@+id/cardView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
                 android:layout_marginTop="32dp"
                 android:background="@drawable/roundoutline"
                 app:cardCornerRadius="50dp"
-                app:layout_constraintStart_toEndOf="@+id/imageView8"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
                 app:layout_constraintTop_toBottomOf="@+id/textView6">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/roundoutline"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
                     <ImageButton
                         android:id="@+id/imageButton4"
@@ -88,8 +87,8 @@
                         android:layout_marginEnd="8dp"
                         android:backgroundTint="#03FFFFFF"
                         android:padding="15dp"
-                        android:paddingStart="30dp"
-                        android:paddingEnd="30dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
                         android:src="@drawable/plusselector"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -98,12 +97,14 @@
 
                     <TextView
                         android:id="@+id/textView8"
-                        android:layout_width="wrap_content"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="22dp"
-                        android:layout_marginEnd="22dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
                         android:fontFamily="@font/bold"
+                        android:gravity="center"
                         android:text="1"
+                        android:textSize="50dp"
                         android:textColor="@color/grey"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imageButton4"
@@ -117,8 +118,8 @@
                         android:layout_marginStart="8dp"
                         android:backgroundTint="#00FFFFFF"
                         android:padding="15dp"
-                        android:paddingStart="30dp"
-                        android:paddingEnd="30dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
                         android:src="@drawable/minutselector"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/textView8"

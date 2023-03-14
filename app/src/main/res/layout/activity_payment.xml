@@ -24,9 +24,8 @@
         android:fontFamily="@font/bold"
         android:gravity="center"
         android:text="Cashless\nPayment Solution"
-        android:textColor="@color/graycolor"
+        android:textColor="@color/graycolors"
         android:textSize="@dimen/Heading"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButton8" />
@@ -68,15 +67,15 @@
         android:id="@+id/textView22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
+        android:layout_marginTop="120dp"
         android:fontFamily="@font/bold"
         android:text="$12.00"
+        android:textColor="@color/white"
         android:textSize="@dimen/SubHeading"
         android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/cardView5"
-        app:layout_constraintStart_toStartOf="@+id/cardView5"
-        app:layout_constraintTop_toBottomOf="@+id/cardView5" />
+        app:layout_constraintEnd_toEndOf="@+id/imageButton9"
+        app:layout_constraintStart_toStartOf="@+id/imageButton9"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton9" />
 
     <TextView
         android:id="@+id/textView23"
@@ -90,34 +89,16 @@
         app:layout_constraintStart_toStartOf="@+id/textView22"
         app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView5"
-        android:layout_width="0dp"
+    <ImageButton
+        android:id="@+id/imageButton9"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="51dp"
-        app:cardCornerRadius="50dp"
+        android:layout_marginTop="150dp"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/imageButton8"
-        app:layout_constraintTop_toBottomOf="@+id/textView21">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="50dp">
-
-            <ImageButton
-                android:id="@+id/imageButton9"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:scaleType="centerInside"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/nayaxtbnselector" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView21"
+        app:srcCompat="@drawable/nayaxtbnselector" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
