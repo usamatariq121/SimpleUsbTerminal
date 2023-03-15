@@ -28,6 +28,11 @@ import com.linkitsoft.beepvending.Helper.CommonUtils;
 import com.linkitsoft.beepvending.Models.ReceiptModel;
 import com.linkitsoft.beepvending.R;
 import com.linkitsoft.beepvending.Utils.LocalDataManager;
+import com.linkitsoft.beepvending.databinding.ActivityCartBinding;
+import com.linkitsoft.beepvending.databinding.ActivityPaymentBinding;
+import com.linkitsoft.beepvending.databinding.ReceiptlayoutBinding;
+
+import com.linkitsoft.beepvending.databinding.ThankyouLayoutBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,122 +41,7 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class PaymentActivity extends AppCompatActivity {
-
-    //********************************** TIMER **********************************************************
-    Boolean isuserpaying = false;
-    Boolean threadintrupt = false;
-    Boolean oncreate = false;
-    SweetAlertDialog sweetAlertDialog;
-    wait30 w30;
-
-    public class wait30 extends Thread {
-        public wait30() {
-        }
-
-        public void run() {
-
-            super.run();
-
-            while (!threadintrupt) {
-
-                try {
-                    Thread.sleep(60000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                final CountDownTimer[] ct = new CountDownTimer[1];
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ct[0] = new CountDownTimer(10000, 1000) {
-                                public void onTick(long millisUntilFinished) {
-
-                                    if (!isuserpaying) {
-                                        if (millisUntilFinished > 0) {
-                                            sweetAlertDialog.setContentText("This session will end in " + millisUntilFinished / 1000);
-                                        } else {
-                                            threadintrupt = true;
-                                            try {
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            } catch (Exception ex) {
-                                            }
-                                            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-                                            startActivity(intent);
-                                            ct[0].cancel();
-                                        }
-                                    }
-                                }
-
-                                public void onFinish() {
-
-                                    try {
-                                        sweetAlertDialog.dismissWithAnimation();
-                                    } catch (Exception ex) {
-                                    }
-                                    threadintrupt = true;
-                                    ct[0].cancel();
-                                    Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                }
-                            };
-
-                            if (!isuserpaying) {
-                                showsweetalerttimeout(ct);
-                                ct[0].start();
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-            }
-        }
-    }
-
-    void showsweetalerttimeout(final CountDownTimer[] ct) {
-        sweetAlertDialog = new SweetAlertDialog(PaymentActivity.this, SweetAlertDialog.WARNING_TYPE);
-
-        sweetAlertDialog.setTitleText("Press anywhere on screen to continue");
-        sweetAlertDialog.setContentText("This session will end in 10");
-        sweetAlertDialog.setConfirmButton("Continue", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                ct[0].cancel();
-                sweetAlertDialog.dismissWithAnimation();
-            }
-        });
-
-        sweetAlertDialog.setCancelButton("Close", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                threadintrupt = true;
-                ct[0].cancel();
-                sweetAlertDialog.dismissWithAnimation();
-                Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);
-            }
-        });
-
-        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                sweetAlertDialog.dismissWithAnimation();
-                ct[0].cancel();
-            }
-        });
-        sweetAlertDialog.show();
-    }
-
-    //********************************** TIMER **********************************************************
+public class PaymentActivity extends BaseActivity {
 
     private View core_view;
 
@@ -172,15 +62,20 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
 
-    ImageButton btnNayax;
-    ImageButton back;
-    TextView totalam;
+
     Double totalPrice ;
+    ActivityPaymentBinding activityPaymentBinding;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
+        activityPaymentBinding = ActivityPaymentBinding.inflate(getLayoutInflater());
+        View view = activityPaymentBinding.getRoot();
+        setContentView(view);
+
 
         core_view = getWindow().getDecorView();
         core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
@@ -197,105 +92,108 @@ public class PaymentActivity extends AppCompatActivity {
         oncreate = true;
 
 
-        btnNayax = findViewById(R.id.imageButton9);
-        back = findViewById(R.id.imageButton8);
-        totalam= findViewById(R.id.textView22);
+
 
         totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
-        totalam.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
+        activityPaymentBinding.txtTotalprice.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
+
+        clickListener();
 
 
 
-        back.setOnClickListener(new View.OnClickListener() {
+    }
+
+    private void clickListener() {
+
+        activityPaymentBinding.btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-        btnNayax.setOnClickListener(new View.OnClickListener() {
+        activityPaymentBinding.btnTapPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showThankyou();
             }
         });
+
     }
 
     private void showThankyou() {
+        ThankyouLayoutBinding thankyouBinding;
+
         final Dialog thankyouDialog = new Dialog(this);
         thankyouDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        thankyouDialog.setContentView(R.layout.thankyou_layout);
+        thankyouBinding = ThankyouLayoutBinding.inflate(getLayoutInflater());
+        View view = thankyouBinding.getRoot();
+        thankyouDialog.setContentView(view);
+
         View core_view = thankyouDialog.getWindow().getDecorView();
-
         thankyouDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        Button btnReceipt;
-        TextView thankyoutotal;
-        TextView msgPaymentsuccess;
-        btnReceipt = thankyouDialog.findViewById(R.id.button);
-        msgPaymentsuccess = thankyouDialog.findViewById(R.id.textView27);
-        thankyoutotal = thankyouDialog.findViewById(R.id.textView28);
 
 
 
-        Spannable wordtoSpan = new SpannableString(msgPaymentsuccess.getText().toString());
+        Spannable wordtoSpan = new SpannableString( thankyouBinding.txtPaymenttext.getText().toString());
         wordtoSpan.setSpan(new ForegroundColorSpan(Color.parseColor("#382633")), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        msgPaymentsuccess.setText(wordtoSpan);
+        thankyouBinding.txtPaymenttext.setText(wordtoSpan);
 
 
 
-        thankyoutotal.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
+        thankyouBinding.txtTotal.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
 
-        btnReceipt.setOnClickListener(new View.OnClickListener() {
+        thankyouBinding.btnreciept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 thankyouDialog.dismiss();
-//                ReceiptFragment receiptFragment = new ReceiptFragment();
-//                receiptFragment.show(getSupportFragmentManager(),"ReceiptFragment");
 
+
+                ReceiptlayoutBinding receiptlayoutBinding;
                 final Dialog receiptDialog = new Dialog(PaymentActivity.this);
                 receiptDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                receiptDialog.setContentView(R.layout.receiptlayout);
+                receiptlayoutBinding = ReceiptlayoutBinding.inflate(getLayoutInflater());
+                View view1 = receiptlayoutBinding.getRoot();
+                receiptDialog.setContentView(view1);
+
+
+
                 View  core_view = receiptDialog.getWindow().getDecorView();
                 receiptDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                Button btnFinish;
-                RecyclerView receiptRecyclerView;
-                List<ReceiptModel> receiptModelList;
-                TextView cartTotal;
-                TextView DateTime;
+
+
                 ReceiptItemAdapter receiptItemAdapter;
-                btnFinish = receiptDialog.findViewById(R.id.button);
-                DateTime = receiptDialog.findViewById(R.id.textView26);
-                cartTotal = receiptDialog.findViewById(R.id.textView28);
 
-
-                receiptRecyclerView = receiptDialog.findViewById(R.id.recyclerView3);
                 Date d = new Date();
                 String pattern = "dd-MM-yyyy";
                 String dateInString =new SimpleDateFormat(pattern).format(new Date());
                 SimpleDateFormat dateFormatprev1 = new SimpleDateFormat("hh:mm:ss aa");
                 String currentTime = dateFormatprev1.format(d.getTime());
-                DateTime.setText(dateInString+"/"+currentTime);
 
+
+                receiptlayoutBinding.txtDate.setText(dateInString+"/"+currentTime);
                 totalPrice = totalPrice;
-                cartTotal.setText("$"+CommonUtils.formatTwoDecimal(totalPrice)+"");
+                receiptlayoutBinding.txtTotalprice.setText("$"+CommonUtils.formatTwoDecimal(totalPrice)+"");
 
 
 
                 receiptItemAdapter = new ReceiptItemAdapter(cartList,PaymentActivity.this);
-                receiptRecyclerView.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
-                receiptRecyclerView.setAdapter(receiptItemAdapter);
-                receiptRecyclerView.setHasFixedSize(true);
+                receiptlayoutBinding.recReciept.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
+                receiptlayoutBinding.recReciept.setAdapter(receiptItemAdapter);
+                receiptlayoutBinding.recReciept.setHasFixedSize(true);
 
 
 
-                btnFinish.setOnClickListener(new View.OnClickListener() {
+                receiptlayoutBinding.btnFinish.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         receiptDialog.dismiss();
                         Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         cartList = new ArrayList<>();
                         startActivity(intent);
+
                     }
                 });
 

@@ -26,6 +26,10 @@ import com.linkitsoft.beepvending.Helper.UIHelper;
 import com.linkitsoft.beepvending.Models.Product;
 import com.linkitsoft.beepvending.R;
 import com.linkitsoft.beepvending.Utils.LocalDataManager;
+import com.linkitsoft.beepvending.databinding.ActivityPaymentBinding;
+import com.linkitsoft.beepvending.databinding.ActivitySelectProductBinding;
+import com.linkitsoft.beepvending.databinding.ProductDetailLayoutBinding;
+import com.linkitsoft.beepvending.databinding.ReceiptlayoutBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,123 +37,8 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class SelectProduct extends AppCompatActivity {
+public class SelectProduct extends BaseActivity {
 
-    //********************************** TIMER **********************************************************
-    Boolean isuserpaying = false;
-    Boolean threadintrupt = false;
-    Boolean oncreate = false;
-    SweetAlertDialog sweetAlertDialog;
-    wait30 w30;
-
-
-    public class wait30 extends Thread {
-        public wait30() {
-        }
-
-        public void run() {
-
-            super.run();
-
-            while (!threadintrupt) {
-
-                try {
-                    Thread.sleep(60000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                final CountDownTimer[] ct = new CountDownTimer[1];
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ct[0] = new CountDownTimer(10000, 1000) {
-                                public void onTick(long millisUntilFinished) {
-
-                                    if (!isuserpaying) {
-                                        if (millisUntilFinished > 0) {
-                                            sweetAlertDialog.setContentText("This session will end in " + millisUntilFinished / 1000);
-                                        } else {
-                                            threadintrupt = true;
-                                            try {
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            } catch (Exception ex) {
-                                            }
-                                            Intent intent = new Intent(SelectProduct.this, MainActivity.class);
-                                            startActivity(intent);
-                                            ct[0].cancel();
-                                        }
-                                    }
-                                }
-
-                                public void onFinish() {
-
-                                    try {
-                                        sweetAlertDialog.dismissWithAnimation();
-                                    } catch (Exception ex) {
-                                    }
-                                    threadintrupt = true;
-                                    ct[0].cancel();
-                                    Intent intent = new Intent(SelectProduct.this, MainActivity.class);
-                                    startActivity(intent);
-                                }
-                            };
-
-                            if (!isuserpaying) {
-                                showsweetalerttimeout(ct);
-                                ct[0].start();
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-            }
-        }
-    }
-
-    void showsweetalerttimeout(final CountDownTimer[] ct) {
-        sweetAlertDialog = new SweetAlertDialog(SelectProduct.this, SweetAlertDialog.WARNING_TYPE);
-
-        sweetAlertDialog.setTitleText("Press anywhere on screen to continue");
-        sweetAlertDialog.setContentText("This session will end in 10");
-        sweetAlertDialog.setConfirmButton("Continue", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                ct[0].cancel();
-                sweetAlertDialog.dismissWithAnimation();
-            }
-        });
-
-        sweetAlertDialog.setCancelButton("Close", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                threadintrupt = true;
-                ct[0].cancel();
-                sweetAlertDialog.dismissWithAnimation();
-                Intent intent = new Intent(SelectProduct.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);
-            }
-        });
-
-        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                sweetAlertDialog.dismissWithAnimation();
-                ct[0].cancel();
-            }
-        });
-        sweetAlertDialog.show();
-    }
-
-    //********************************** TIMER **********************************************************
 
     private View core_view;
 
@@ -191,11 +80,15 @@ public class SelectProduct extends AppCompatActivity {
 
     public static ArrayList<Product> cartList = new ArrayList<>();
 
+    ActivitySelectProductBinding activitySelectProductBinding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_product);
+        activitySelectProductBinding = ActivitySelectProductBinding.inflate(getLayoutInflater());
+        View view = activitySelectProductBinding.getRoot();
+        setContentView(view);
 
         core_view = getWindow().getDecorView();
         core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
@@ -213,7 +106,7 @@ public class SelectProduct extends AppCompatActivity {
 
 
         bottom = findViewById(R.id.constraintLayout8);
-        recyclerView = findViewById(R.id.recyclerView);
+
 
         cancel = findViewById(R.id.button6);
         checkout = findViewById(R.id.button7);
@@ -225,34 +118,13 @@ public class SelectProduct extends AppCompatActivity {
         cartList = new ArrayList<>();
 
 
+        clickListener();
 
 
-        checkout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent next = new Intent(SelectProduct.this, CartActivity.class);
-                startActivity(next);
-            }
-        });
 
-        imgCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent next = new Intent(SelectProduct.this, CartActivity.class);
-                startActivity(next);
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
 
         productList = new ArrayList<Product>();
-
         productList.add(new Product("test", 1, false, 1, "India’s Magic Lays", 3.98,R.drawable.prod1));
         productList.add(new Product("test", 1, false, 2, "Heat Beat lays", 3.21,R.drawable.p5));
         productList.add(new Product("test", 1, false, 3, "Lays Classic ver ", 2.98,R.drawable.p6));
@@ -261,11 +133,36 @@ public class SelectProduct extends AppCompatActivity {
 
         menuItemAdpater = new MenuItemAdpater(productList, SelectProduct.this);
         menuItemAdpater.setOnItemClickListener(onCartItemClickListener);
-        recyclerView.setLayoutManager(new GridLayoutManager(SelectProduct.this, 3));
-        recyclerView.setAdapter(menuItemAdpater);
-        recyclerView.setHasFixedSize(true);
+        activitySelectProductBinding.recproduct.setLayoutManager(new GridLayoutManager(SelectProduct.this, 3));
+        activitySelectProductBinding.recproduct.setAdapter(menuItemAdpater);
+        activitySelectProductBinding.recproduct.setHasFixedSize(true);
 
 
+    }
+
+    private void clickListener() {
+        activitySelectProductBinding.button7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent next = new Intent(SelectProduct.this, CartActivity.class);
+                startActivity(next);
+            }
+        });
+
+        activitySelectProductBinding.cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent next = new Intent(SelectProduct.this, CartActivity.class);
+                startActivity(next);
+            }
+        });
+
+        activitySelectProductBinding.button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
 
@@ -280,44 +177,38 @@ public class SelectProduct extends AppCompatActivity {
     };
 
     private void showProductDetail(ImageView addedImage, int position , int prodQuantity , double price , String itemname,int image) {
+
+        ProductDetailLayoutBinding productDetailLayoutBinding;
         final Dialog productDialog = new Dialog(this);
         productDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        productDialog.setContentView(R.layout.product_detail_layout);
+
+        productDetailLayoutBinding = ProductDetailLayoutBinding.inflate(getLayoutInflater());
+        View view1 = productDetailLayoutBinding.getRoot();
+        productDialog.setContentView(view1);
+
+
         productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         core_views = productDialog.getWindow().getDecorView();
-
         productDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#5E3C3939")));
-        Button addToCart, close;
-        ImageButton btnPlus;
-        TextView tvTotalProduct;
-        ImageButton btnMinus;
-        ImageView imgProd;
+
         TextView Ingredient;
         TextView Description;
-        TextView tvProdPrice;
-        TextView tvProdName;
-        imgProd = productDialog.findViewById(R.id.imageView8);
-        addToCart = productDialog.findViewById(R.id.imageButton3);
-        close = productDialog.findViewById(R.id.imageButton2);
-        btnPlus = productDialog.findViewById(R.id.imageButton4);
-        btnMinus = productDialog.findViewById(R.id.imageButton5);
-        tvTotalProduct = productDialog.findViewById(R.id.textView8);
-        tvProdName = productDialog.findViewById(R.id.textView6);
-        tvProdPrice = productDialog.findViewById(R.id.textView7);
+
 //        Ingredient = productDialog.findViewById(R.id.textView20);
 //        Description = productDialog.findViewById(R.id.textView31);
 
 
 
-        Picasso.get().load(image).into(imgProd);
-        tvProdName.setText(itemname);
-        tvProdPrice.setText("$" + String.format("%,.2f", price) + "");
+        Picasso.get().load(image).into(productDetailLayoutBinding.prodImg);
+        productDetailLayoutBinding.prodName.setText(itemname);
+        productDetailLayoutBinding.prodPrice.setText("$" + String.format("%,.2f", price) + "");
+
 //        Ingredient.setText(ing);
 //        Description.setText(des);
 
 
         prodQuantityCount = 1;
-        addToCart.setOnClickListener(new View.OnClickListener() {
+        productDetailLayoutBinding.btnaddtocart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 productDialog.cancel();
@@ -328,12 +219,12 @@ public class SelectProduct extends AppCompatActivity {
                 amount = prodQuantityCount * price;
 
                 menuItemAdpater.notifyDataSetChanged();
-                bottom.setVisibility(View.VISIBLE);
+                activitySelectProductBinding.constraintLayout8.setVisibility(View.VISIBLE);
                 count = count + prodQuantityCount;
-                tvQuantity.setText(count + "");
+                activitySelectProductBinding.cartQuantity.setText(count + "");
 
-                imgCart.setVisibility(View.VISIBLE);
-                tvQuantity.setVisibility(View.VISIBLE);
+                activitySelectProductBinding.cart.setVisibility(View.VISIBLE);
+                activitySelectProductBinding.cartQuantity.setVisibility(View.VISIBLE);
 
                 cartList.add(new Product(price,itemname,image,prodQuantityCount,position));
 
@@ -347,28 +238,28 @@ public class SelectProduct extends AppCompatActivity {
         });
 
 
-        btnPlus.setOnClickListener(new View.OnClickListener() {
+        productDetailLayoutBinding.btnadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 prodQuantityCount++;
                 if (prodQuantityCount > 0) {
-                        tvTotalProduct.setText("" + prodQuantityCount);
+                        productDetailLayoutBinding.textView8.setText("" + prodQuantityCount);
                     } else {
                         prodQuantityCount++;
-                        tvTotalProduct.setText("" + prodQuantityCount);
+                       productDetailLayoutBinding.textView8.setText("" + prodQuantityCount);
                     }
             }
         });
 
 
-        btnMinus.setOnClickListener(new View.OnClickListener() {
+        productDetailLayoutBinding.btnminus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 prodQuantityCount--;
                 if (prodQuantityCount > 0) {
-                    tvTotalProduct.setText("" + prodQuantityCount);
+                    productDetailLayoutBinding.textView8.setText("" + prodQuantityCount);
                 } else {
                     prodQuantityCount = 1;
                     productDialog.dismiss();
@@ -376,7 +267,7 @@ public class SelectProduct extends AppCompatActivity {
             }
         });
 
-        close.setOnClickListener(new View.OnClickListener() {
+        productDetailLayoutBinding.btncancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 productDialog.cancel();

@@ -28,10 +28,10 @@
         android:textSize="@dimen/Heading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton8" />
+        app:layout_constraintTop_toBottomOf="@+id/btnback" />
 
     <ImageButton
-        android:id="@+id/imageButton8"
+        android:id="@+id/btnback"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="51dp"
@@ -64,7 +64,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/textView22"
+        android:id="@+id/txtTotalprice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
@@ -73,9 +73,9 @@
         android:textColor="@color/white"
         android:textSize="@dimen/SubHeading"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/imageButton9"
-        app:layout_constraintStart_toStartOf="@+id/imageButton9"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton9" />
+        app:layout_constraintEnd_toEndOf="@+id/btnTapPay"
+        app:layout_constraintStart_toStartOf="@+id/btnTapPay"
+        app:layout_constraintTop_toBottomOf="@+id/btnTapPay" />
 
     <TextView
         android:id="@+id/textView23"
@@ -85,12 +85,12 @@
         android:text="Amount"
         android:textColor="@color/white"
         android:textSize="@dimen/SubHeading"
-        app:layout_constraintEnd_toEndOf="@+id/textView22"
-        app:layout_constraintStart_toStartOf="@+id/textView22"
-        app:layout_constraintTop_toBottomOf="@+id/textView22" />
+        app:layout_constraintEnd_toEndOf="@+id/txtTotalprice"
+        app:layout_constraintStart_toStartOf="@+id/txtTotalprice"
+        app:layout_constraintTop_toBottomOf="@+id/txtTotalprice" />
 
     <ImageButton
-        android:id="@+id/imageButton9"
+        android:id="@+id/btnTapPay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"

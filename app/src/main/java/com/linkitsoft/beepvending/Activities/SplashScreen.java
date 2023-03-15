@@ -14,6 +14,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.linkitsoft.beepvending.R;
+import com.linkitsoft.beepvending.databinding.ActivitySelectProductBinding;
+import com.linkitsoft.beepvending.databinding.ActivitySplashScreenBinding;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -38,10 +40,15 @@ public class SplashScreen extends AppCompatActivity {
     }
 
 
+
+    ActivitySplashScreenBinding splashScreenBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        splashScreenBinding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
+        View view = splashScreenBinding.getRoot();
+        setContentView(view);
 
 
         core_view = getWindow().getDecorView();
@@ -54,7 +61,7 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-        mainImage = findViewById(R.id.imageView);
+
 
         loadScreen();
 
@@ -71,7 +78,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void loadScreen(){
         if (checkPermission()){
-            mainImage.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
+            splashScreenBinding.splashlogo.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in));
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override

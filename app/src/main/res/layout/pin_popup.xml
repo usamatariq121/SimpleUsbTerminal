@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:text="Enter Pin"
             android:textSize="52dp"
+            android:textStyle="bold"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView32" />
 
         <Button
-            android:id="@+id/button6"
+            android:id="@+id/btncancalPin"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +76,7 @@
             app:layout_constraintTop_toBottomOf="@+id/pass" />
 
         <Button
-            android:id="@+id/button7"
+            android:id="@+id/btnSubmitPin"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

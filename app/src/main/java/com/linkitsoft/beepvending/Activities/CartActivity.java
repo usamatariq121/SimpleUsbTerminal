@@ -25,6 +25,8 @@ import com.linkitsoft.beepvending.Helper.CommonUtils;
 import com.linkitsoft.beepvending.Models.Product;
 import com.linkitsoft.beepvending.R;
 import com.linkitsoft.beepvending.Utils.LocalDataManager;
+import com.linkitsoft.beepvending.databinding.ActivityCartBinding;
+import com.linkitsoft.beepvending.databinding.ActivityConfigBinding;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -32,139 +34,8 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends BaseActivity {
 
-    //********************************** TIMER **********************************************************
-    Boolean isuserpaying = false;
-    Boolean threadintrupt = false;
-    Boolean oncreate = false;
-    SweetAlertDialog sweetAlertDialog;
-    wait30 w30;
-
-    public class wait30 extends Thread {
-        public wait30() {
-        }
-
-        public void run() {
-
-            super.run();
-
-            while (!threadintrupt) {
-
-                try {
-                    Thread.sleep(60000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                final CountDownTimer[] ct = new CountDownTimer[1];
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ct[0] = new CountDownTimer(10000, 1000) {
-                                public void onTick(long millisUntilFinished) {
-
-                                    if (!isuserpaying) {
-                                        if (millisUntilFinished > 0) {
-                                            sweetAlertDialog.setContentText("This session will end in " + millisUntilFinished / 1000);
-                                        } else {
-                                            threadintrupt = true;
-                                            try {
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            } catch (Exception ex) {
-                                            }
-                                            Intent intent = new Intent(CartActivity.this, MainActivity.class);
-                                            startActivity(intent);
-                                            ct[0].cancel();
-                                        }
-                                    }
-                                }
-
-                                public void onFinish() {
-
-                                    try {
-                                        sweetAlertDialog.dismissWithAnimation();
-                                    } catch (Exception ex) {
-                                    }
-                                    threadintrupt = true;
-                                    ct[0].cancel();
-                                    Intent intent = new Intent(CartActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                }
-                            };
-
-                            if (!isuserpaying) {
-                                showsweetalerttimeout(ct);
-                                ct[0].start();
-                            }
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-            }
-        }
-    }
-
-    void showsweetalerttimeout(final CountDownTimer[] ct) {
-        sweetAlertDialog = new SweetAlertDialog(CartActivity.this, SweetAlertDialog.WARNING_TYPE);
-
-        sweetAlertDialog.setTitleText("Press anywhere on screen to continue");
-        sweetAlertDialog.setContentText("This session will end in 10");
-        sweetAlertDialog.setConfirmButton("Continue", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                ct[0].cancel();
-                sweetAlertDialog.dismissWithAnimation();
-            }
-        });
-
-        sweetAlertDialog.setCancelButton("Close", new SweetAlertDialog.OnSweetClickListener() {
-            @Override
-            public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                threadintrupt = true;
-                ct[0].cancel();
-                sweetAlertDialog.dismissWithAnimation();
-                Intent intent = new Intent(CartActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                startActivity(intent);
-            }
-        });
-
-        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                sweetAlertDialog.dismissWithAnimation();
-                ct[0].cancel();
-            }
-        });
-        sweetAlertDialog.show();
-    }
-
-    //********************************** TIMER **********************************************************
-
-    private View core_view;
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            core_view.setSystemUiVisibility(hide_system_bars());
-        }
-    }
-
-    private int hide_system_bars() {
-        return View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-    }
 
 
 
@@ -187,39 +58,44 @@ public class CartActivity extends AppCompatActivity {
     int totalItems = 0;
     TextView tvTotalAmount, tvCartTotal, tvTotalItems, tvCartTotalAfterTax, tvTaxAmount;
 
+
+    ActivityCartBinding activityCartBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cart);
-
-        core_view = getWindow().getDecorView();
-        core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if (visibility == 0) {
-                    core_view.setSystemUiVisibility(hide_system_bars());
-                }
-            }
-        });
-
-        w30 = new wait30();
-        w30.start();
-        oncreate = true;
-
-        recyclerView = findViewById(R.id.recyclerView2);
-
-        back = findViewById(R.id.imageButton6);
-        checkout = findViewById(R.id.button6);
-        totalamt = findViewById(R.id.textView19);
-        tvCartTotal = findViewById(R.id.textView15);
-        tvTotalAmount = findViewById(R.id.textView12);
-        tvCartTotalAfterTax = findViewById(R.id.textView19);
-        tvTotalItems = findViewById(R.id.textView10);
-        tvTaxAmount = findViewById(R.id.textView16);
+        activityCartBinding = ActivityCartBinding.inflate(getLayoutInflater());
+        View view = activityCartBinding.getRoot();
+        setContentView(view);
 
 
 
-        checkout.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+        clickListener();
+
+
+
+        if(cartList!=null){
+            cartItemAdapter = new CartItemAdapter(cartList,this);
+            cartItemAdapter.setOnItemClickListener(onItemClickListener);
+            activityCartBinding.recyclerView2.setLayoutManager(new LinearLayoutManager(this));
+            activityCartBinding.recyclerView2.setAdapter(cartItemAdapter);
+            activityCartBinding.recyclerView2.setHasFixedSize(true);
+        }
+
+
+        Double totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+        activityCartBinding.textView15.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        totalPrice = totalPrice + 1.00;
+        activityCartBinding.textView19.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+
+    }
+
+    private void clickListener() {
+        activityCartBinding.button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent next = new Intent(CartActivity.this, PaymentActivity.class);
@@ -227,30 +103,12 @@ public class CartActivity extends AppCompatActivity {
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
+        activityCartBinding.imageButton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
-
-        if(cartList!=null){
-            cartItemAdapter = new CartItemAdapter(cartList,this);
-            cartItemAdapter.setOnItemClickListener(onItemClickListener);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(cartItemAdapter);
-            recyclerView.setHasFixedSize(true);
-        }
-
-
-
-        Double totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
-
-        tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
-        totalPrice = totalPrice + 1.00;
-        totalamt.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
-
     }
 
 
@@ -374,10 +232,10 @@ public class CartActivity extends AppCompatActivity {
 
     private void showAmounts(double totalPrice, double finalTotalPrice) {
 
-        tvTotalAmount.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
+        activityCartBinding.textView12.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
         tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
         totalPrice = totalPrice + 1.00;
-        tvCartTotalAfterTax.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        activityCartBinding.textView19.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
 
     }
 
@@ -385,11 +243,11 @@ public class CartActivity extends AppCompatActivity {
 
     private void showAmounts(int qty, double totalPrice, double finalTotalPrice) {
 
-        tvTotalAmount.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
+        activityCartBinding.textView12.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
         tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
         LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
         totalPrice = totalPrice + 1.00;
-        tvCartTotalAfterTax.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        activityCartBinding.textView12.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
     }
 
 
@@ -401,22 +259,5 @@ public class CartActivity extends AppCompatActivity {
         sd.show();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        threadintrupt = true;
-        isuserpaying = true;
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        threadintrupt = false;
-        isuserpaying = false;
-        if (!oncreate) {
-            new wait30().start();
-        } else {
-            oncreate = false;
-        }
 
-    }
 }

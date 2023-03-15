@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btntouchtoBuy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#00FFFFFF"
@@ -36,10 +36,10 @@
             android:layout_height="200dp"
             android:scaleType="fitCenter"
             android:layout_marginEnd="150dp"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton"
+            app:layout_constraintBottom_toBottomOf="@+id/btntouchtoBuy"
+            app:layout_constraintEnd_toStartOf="@+id/btntouchtoBuy"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="@+id/btntouchtoBuy"
             app:srcCompat="@drawable/mainlogo2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,33 +1,39 @@
 package com.linkitsoft.beepvending.Activities;
 
-import static com.linkitsoft.beepvending.Activities.SelectProduct.cartList;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.linkitsoft.beepvending.Adapters.ReceiptItemAdapter;
-import com.linkitsoft.beepvending.Models.ReceiptModel;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.linkitsoft.beepvending.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class Receipt extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
     //********************************** TIMER **********************************************************
+
     Boolean isuserpaying = false;
     Boolean threadintrupt = false;
     Boolean oncreate = false;
     SweetAlertDialog sweetAlertDialog;
     wait30 w30;
+
+    Dialog timer_popup;
+
+    Button btnCancel,btnSubmit;
+    TextView txtTimer;
+
+
+
 
     public class wait30 extends Thread {
         public wait30() {
@@ -40,7 +46,8 @@ public class Receipt extends AppCompatActivity {
             while (!threadintrupt) {
 
                 try {
-                    Thread.sleep(60000);
+//                    set 3 min:
+                    Thread.sleep(30000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -55,14 +62,14 @@ public class Receipt extends AppCompatActivity {
 
                                     if (!isuserpaying) {
                                         if (millisUntilFinished > 0) {
-                                            sweetAlertDialog.setContentText("This session will end in " + millisUntilFinished / 1000);
+                                            txtTimer.setText("This session will end in " + millisUntilFinished / 1000);
                                         } else {
                                             threadintrupt = true;
                                             try {
-                                                sweetAlertDialog.dismissWithAnimation();
+                                                timer_popup.cancel();
                                             } catch (Exception ex) {
                                             }
-                                            Intent intent = new Intent(Receipt.this, MainActivity.class);
+                                            Intent intent = new Intent(BaseActivity.this, MainActivity.class);
                                             startActivity(intent);
                                             ct[0].cancel();
                                         }
@@ -72,18 +79,19 @@ public class Receipt extends AppCompatActivity {
                                 public void onFinish() {
 
                                     try {
-                                        sweetAlertDialog.dismissWithAnimation();
+                                        timer_popup.cancel();
                                     } catch (Exception ex) {
                                     }
                                     threadintrupt = true;
                                     ct[0].cancel();
-                                    Intent intent = new Intent(Receipt.this, MainActivity.class);
+                                    Intent intent = new Intent(BaseActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 }
                             };
 
                             if (!isuserpaying) {
                                 showsweetalerttimeout(ct);
+                                timer_popUp(ct);
                                 ct[0].start();
                             }
 
@@ -99,7 +107,7 @@ public class Receipt extends AppCompatActivity {
     }
 
     void showsweetalerttimeout(final CountDownTimer[] ct) {
-        sweetAlertDialog = new SweetAlertDialog(Receipt.this, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog = new SweetAlertDialog(BaseActivity.this, SweetAlertDialog.WARNING_TYPE);
 
         sweetAlertDialog.setTitleText("Press anywhere on screen to continue");
         sweetAlertDialog.setContentText("This session will end in 10");
@@ -118,7 +126,7 @@ public class Receipt extends AppCompatActivity {
                 threadintrupt = true;
                 ct[0].cancel();
                 sweetAlertDialog.dismissWithAnimation();
-                Intent intent = new Intent(Receipt.this, MainActivity.class);
+                Intent intent = new Intent(BaseActivity.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                 startActivity(intent);
@@ -135,12 +143,49 @@ public class Receipt extends AppCompatActivity {
         sweetAlertDialog.show();
     }
 
+
+    public void timer_popUp(final CountDownTimer[] ct){
+        timer_popup = new Dialog(BaseActivity.this);
+        timer_popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        timer_popup.setContentView(R.layout.timer_popup);
+
+        txtTimer = findViewById(R.id.txtTimer);
+        btnCancel = findViewById(R.id.button6);
+        btnSubmit = findViewById(R.id.button7);
+
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
     //********************************** TIMER **********************************************************
 
-    private View core_view;
-    RecyclerView receiptRecyclerView;
-    private List<ReceiptModel> receiptModelList;
-    ReceiptItemAdapter receiptItemAdapter;
+
+
+// *********************************App View**************************************************************
+private View core_view;
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -157,10 +202,13 @@ public class Receipt extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
     }
 
+// *********************************App View**************************************************************
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_receipt);
+
         core_view = getWindow().getDecorView();
         core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
@@ -174,24 +222,8 @@ public class Receipt extends AppCompatActivity {
         w30 = new wait30();
         w30.start();
         oncreate = true;
-
-        receiptRecyclerView = findViewById(R.id.recyclerView3);
-
-
-        receiptItemAdapter = new ReceiptItemAdapter(cartList,Receipt.this);
-        receiptRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        receiptRecyclerView.setAdapter(receiptItemAdapter);
-        receiptRecyclerView.setHasFixedSize(true);
-
     }
 
-    public void showdialog(String title, String content, int type) {
-
-        final SweetAlertDialog sd = new SweetAlertDialog(this, type)
-                .setTitleText(title)
-                .setContentText(content);
-        sd.show();
-    }
 
     @Override
     protected void onPause() {
@@ -199,6 +231,7 @@ public class Receipt extends AppCompatActivity {
         threadintrupt = true;
         isuserpaying = true;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -209,6 +242,5 @@ public class Receipt extends AppCompatActivity {
         } else {
             oncreate = false;
         }
-
     }
 }

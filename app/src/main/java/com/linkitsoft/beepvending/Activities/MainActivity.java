@@ -30,6 +30,9 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.linkitsoft.beepvending.Helper.UIHelper;
 import com.linkitsoft.beepvending.R;
 import com.linkitsoft.beepvending.Utils.LocalDataManager;
+import com.linkitsoft.beepvending.databinding.ActivityMainBinding;
+import com.linkitsoft.beepvending.databinding.PinPopupBinding;
+import com.linkitsoft.beepvending.databinding.ThankyouLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +40,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private View core_view;
-    private ImageSlider videoImageSlider;
     List<SlideModel> imageList = new ArrayList<SlideModel>();
     String video_path = null;
-    ArrayList<String> video = new ArrayList<>();
-    VideoView bannerImageVideo;
-    ImageView mainlogo;
     int count = 0;
 
     Button btnSubmit, btnCancel;
     EditText etPin;
     String pin = "9856";
+
+
+    ActivityMainBinding activityMainBinding;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -70,12 +72,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = activityMainBinding.getRoot();
+        setContentView(view);
 
         core_view = getWindow().getDecorView();
-        start = findViewById(R.id.imageButton);
-        videoImageSlider = findViewById(R.id.videoImageSlider);
-        mainlogo = findViewById(R.id.mainlogo);
 
         LocalDataManager.createInstance(this);
 
@@ -116,11 +117,28 @@ public class MainActivity extends AppCompatActivity {
         imageList.add(new SlideModel(R.drawable.banner, ScaleTypes.FIT));
         imageList.add(new SlideModel(R.drawable.banner, ScaleTypes.FIT));
 
-        videoImageSlider.setImageList(imageList);
+        activityMainBinding.videoImageSlider.setImageList(imageList);
 //        videoPlay();
 
 
-        mainlogo.setOnClickListener(new View.OnClickListener() {
+        core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if (visibility == 0) {
+                    core_view.setSystemUiVisibility(hide_system_bars());
+                }
+            }
+        });
+
+        clickListener();
+
+
+
+    }
+
+    private void clickListener() {
+
+        activityMainBinding.mainlogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(count ==7)
@@ -135,18 +153,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-        core_view.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                if (visibility == 0) {
-                    core_view.setSystemUiVisibility(hide_system_bars());
-                }
-            }
-        });
-
-        start.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.btntouchtoBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -154,73 +161,36 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(next);
             }
         });
+
     }
 
-    private void videoPlay(){
-        try {
-
-            final MediaController mediaController = new MediaController(MainActivity.this);
-            bannerImageVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-                        @Override
-                        public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-                            mediaController.setAnchorView(bannerImageVideo);
-                            mediaPlayer.setLooping(true);
-                            mediaPlayer.setScreenOnWhilePlaying(true);
-                        }
-                    });
-                }
-            });
-            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
-                bannerImageVideo.setVideoPath(video_path);
-                bannerImageVideo.start();
-                bannerImageVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-
-                    @Override
-                    public boolean onError(MediaPlayer mp, int what, int extra) {
-                        Log.d("video", "setOnErrorListener ");
-                        return true;
-                    }
-                });
-                bannerImageVideo.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        bannerImageVideo.start();
-                    }
-                });
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     private void showPinDialog() {
+
+        PinPopupBinding pinPopupBinding;
 
         final Dialog pinDialog = new Dialog(this);
         pinDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        pinDialog.setContentView(R.layout.pin_popup);
         pinDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        etPin = pinDialog.findViewById(R.id.pass);
-        btnSubmit = pinDialog.findViewById(R.id.button7);
-        btnCancel = pinDialog.findViewById(R.id.button6);
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        pinPopupBinding = PinPopupBinding.inflate(getLayoutInflater());
+        View view = pinPopupBinding.getRoot();
+        pinDialog.setContentView(view);
+
+
+
+        pinPopupBinding.btncancalPin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pinDialog.dismiss();
             }
         });
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        pinPopupBinding.btnSubmitPin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (etPin.getText().toString().length() > 0 && !etPin.getText().toString().equals("")){
-                    if (etPin.getText().toString().equals(pin)){
+                if (pinPopupBinding.pass.getText().toString().length() > 0 && !pinPopupBinding.pass.getText().toString().equals("")){
+                    if (pinPopupBinding.pass.getText().toString().equals(pin)){
                         pinDialog.dismiss();
                         Intent intent = new Intent(MainActivity.this,ConfigActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -22,17 +22,8 @@
             android:name=".Activities.ConfigActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".Activities.ProductDetail" />
-        <activity
-            android:name=".Activities.Receipt"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent"
-            />
         <activity
             android:name=".Activities.PaymentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activities.PaymentMethod"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.CartActivity"
