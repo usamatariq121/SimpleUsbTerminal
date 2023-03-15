@@ -43,6 +43,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:text="Total :"
+                android:textStyle="bold"
+                android:fontFamily="@font/bold"
                 android:textColor="@color/lightgray"
                 android:textSize="@dimen/Normal"
                 app:layout_constraintBottom_toBottomOf="@+id/textView19"
