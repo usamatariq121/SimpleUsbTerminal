@@ -87,9 +87,6 @@ public class PaymentActivity extends BaseActivity {
             }
         });
 
-        w30 = new wait30();
-        w30.start();
-        oncreate = true;
 
 
 
@@ -113,6 +110,13 @@ public class PaymentActivity extends BaseActivity {
         });
 
         activityPaymentBinding.btnTapPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showThankyou();
+            }
+        });
+
+        activityPaymentBinding.btnScanQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showThankyou();
@@ -214,22 +218,5 @@ public class PaymentActivity extends BaseActivity {
         core_view.setSystemUiVisibility(hide_system_bars());
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        threadintrupt = true;
-        isuserpaying = true;
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        threadintrupt = false;
-        isuserpaying = false;
-        if (!oncreate) {
-            new wait30().start();
-        } else {
-            oncreate = false;
-        }
 
-    }
 }

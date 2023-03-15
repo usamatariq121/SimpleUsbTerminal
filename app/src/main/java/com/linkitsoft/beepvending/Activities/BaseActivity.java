@@ -62,7 +62,7 @@ public class BaseActivity extends AppCompatActivity {
 
                                     if (!isuserpaying) {
                                         if (millisUntilFinished > 0) {
-                                            txtTimer.setText("This session will end in " + millisUntilFinished / 1000);
+                                            sweetAlertDialog.setContentText("This session will end in " + millisUntilFinished / 1000);
                                         } else {
                                             threadintrupt = true;
                                             try {

@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.SingleLineTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -43,6 +45,22 @@ public class ConfigActivity extends BaseActivity {
 
     private void clickListener() {
 
+
+        Binding.showPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Binding.pass.getTransformationMethod().getClass().getSimpleName().equals("PasswordTransformationMethod")) {
+                    Binding.pass.setTransformationMethod(new SingleLineTransformationMethod());
+                    Binding.showPass.setBackgroundResource(R.drawable.passhow1);
+                } else {
+                    Binding.pass.setTransformationMethod(new PasswordTransformationMethod());
+                    Binding.showPass.setBackgroundResource(R.drawable.passhide1);
+                }
+
+                Binding.pass.setSelection(Binding.pass.getText().length());
+            }
+        });
+
         Binding.btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +92,7 @@ public class ConfigActivity extends BaseActivity {
                 .setContentText(content);
         sd.show();
     }
+
 
 
 }

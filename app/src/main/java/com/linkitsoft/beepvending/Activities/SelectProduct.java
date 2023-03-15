@@ -100,9 +100,6 @@ public class SelectProduct extends BaseActivity {
             }
         });
 
-        w30 = new wait30();
-        w30.start();
-        oncreate = true;
 
 
         bottom = findViewById(R.id.constraintLayout8);
@@ -289,23 +286,5 @@ public class SelectProduct extends BaseActivity {
         sd.show();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        threadintrupt = true;
-        isuserpaying = true;
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        threadintrupt = false;
-        isuserpaying = false;
-        if (!oncreate) {
-            new wait30().start();
-        } else {
-            oncreate = false;
-        }
-
-    }
 }

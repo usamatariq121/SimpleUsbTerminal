@@ -35,7 +35,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="51dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="#00FFFFFF"
         android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,38 +67,50 @@
         android:id="@+id/txtTotalprice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
         android:fontFamily="@font/bold"
         android:text="$12.00"
         android:textColor="@color/white"
         android:textSize="@dimen/SubHeading"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/btnTapPay"
-        app:layout_constraintStart_toStartOf="@+id/btnTapPay"
-        app:layout_constraintTop_toBottomOf="@+id/btnTapPay" />
+        app:layout_constraintBottom_toTopOf="@+id/textView23"
+        app:layout_constraintEnd_toEndOf="@+id/btnScanQr"
+        app:layout_constraintStart_toStartOf="@+id/btnScanQr" />
 
     <TextView
         android:id="@+id/textView23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:fontFamily="@font/bold"
         android:text="Amount"
         android:textColor="@color/white"
         android:textSize="@dimen/SubHeading"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="@+id/txtTotalprice"
-        app:layout_constraintStart_toStartOf="@+id/txtTotalprice"
-        app:layout_constraintTop_toBottomOf="@+id/txtTotalprice" />
+        app:layout_constraintStart_toStartOf="@+id/txtTotalprice" />
 
     <ImageButton
         android:id="@+id/btnTapPay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="50dp"
         android:backgroundTint="#00FFFFFF"
         android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView21"
         app:srcCompat="@drawable/nayaxtbnselector" />
+
+    <ImageButton
+        android:id="@+id/btnScanQr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:scaleType="centerInside"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTapPay"
+        app:srcCompat="@drawable/scanqrselector" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
