@@ -1,20 +1,13 @@
 package com.linkitsoft.beepvending.Activities;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.linkitsoft.beepvending.R;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -26,14 +19,6 @@ public class BaseActivity extends AppCompatActivity {
     Boolean oncreate = false;
     SweetAlertDialog sweetAlertDialog;
     wait30 w30;
-
-    Dialog timer_popup;
-
-    Button btnCancel,btnSubmit;
-    TextView txtTimer;
-
-
-
 
     public class wait30 extends Thread {
         public wait30() {
@@ -47,7 +32,7 @@ public class BaseActivity extends AppCompatActivity {
 
                 try {
 //                    set 3 min:
-                    Thread.sleep(30000);
+                    Thread.sleep(60000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -66,10 +51,11 @@ public class BaseActivity extends AppCompatActivity {
                                         } else {
                                             threadintrupt = true;
                                             try {
-                                                timer_popup.cancel();
+                                                sweetAlertDialog.dismissWithAnimation();
                                             } catch (Exception ex) {
                                             }
                                             Intent intent = new Intent(BaseActivity.this, MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(intent);
                                             ct[0].cancel();
                                         }
@@ -79,19 +65,19 @@ public class BaseActivity extends AppCompatActivity {
                                 public void onFinish() {
 
                                     try {
-                                        timer_popup.cancel();
+                                        sweetAlertDialog.dismissWithAnimation();
                                     } catch (Exception ex) {
                                     }
                                     threadintrupt = true;
                                     ct[0].cancel();
                                     Intent intent = new Intent(BaseActivity.this, MainActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                 }
                             };
 
                             if (!isuserpaying) {
                                 showsweetalerttimeout(ct);
-                                timer_popUp(ct);
                                 ct[0].start();
                             }
 
@@ -127,7 +113,7 @@ public class BaseActivity extends AppCompatActivity {
                 ct[0].cancel();
                 sweetAlertDialog.dismissWithAnimation();
                 Intent intent = new Intent(BaseActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                 startActivity(intent);
             }
@@ -142,42 +128,6 @@ public class BaseActivity extends AppCompatActivity {
         });
         sweetAlertDialog.show();
     }
-
-
-    public void timer_popUp(final CountDownTimer[] ct){
-        timer_popup = new Dialog(BaseActivity.this);
-        timer_popup.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        timer_popup.setContentView(R.layout.timer_popup);
-
-        txtTimer = findViewById(R.id.txtTimer);
-        btnCancel = findViewById(R.id.button6);
-        btnSubmit = findViewById(R.id.button7);
-
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-
 
     //********************************** TIMER **********************************************************
 

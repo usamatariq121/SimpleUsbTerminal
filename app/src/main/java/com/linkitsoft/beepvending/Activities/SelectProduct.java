@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.linkitsoft.beepvending.Adapters.MenuItemAdpater;
+import com.linkitsoft.beepvending.Helper.ActivityRequest;
 import com.linkitsoft.beepvending.Helper.UIHelper;
 import com.linkitsoft.beepvending.Models.Product;
 import com.linkitsoft.beepvending.R;
@@ -142,7 +143,8 @@ public class SelectProduct extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent next = new Intent(SelectProduct.this, CartActivity.class);
-                startActivity(next);
+                next.putExtra("totalItems", Integer.parseInt(tvQuantity.getText().toString()));
+                startActivityForResult(next, ActivityRequest.REQUEST_ADD_TO_CART);
             }
         });
 
@@ -150,13 +152,16 @@ public class SelectProduct extends BaseActivity {
             @Override
             public void onClick(View view) {
                 Intent next = new Intent(SelectProduct.this, CartActivity.class);
-                startActivity(next);
+                next.putExtra("totalItems", Integer.parseInt(tvQuantity.getText().toString()));
+                startActivityForResult(next, ActivityRequest.REQUEST_ADD_TO_CART);
             }
         });
 
         activitySelectProductBinding.button6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent next = new Intent(SelectProduct.this, MainActivity.class);
+                startActivity(next);
                 finish();
             }
         });

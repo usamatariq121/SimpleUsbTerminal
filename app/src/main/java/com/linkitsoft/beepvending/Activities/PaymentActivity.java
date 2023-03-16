@@ -92,6 +92,7 @@ public class PaymentActivity extends BaseActivity {
 
 
         totalPrice = LocalDataManager.getInstance().getDouble("TotalPrice");
+        totalPrice = totalPrice + 1.00;
         activityPaymentBinding.txtTotalprice.setText("$"+ CommonUtils.formatTwoDecimal(totalPrice));
 
         clickListener();

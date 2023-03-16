@@ -106,6 +106,12 @@ public class CartActivity extends BaseActivity {
         activityCartBinding.imageButton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("totalAmountAC", totalAmount);
+                intent.putExtra("totalItemAC", totalItems);
+                setResult(ActivityRequest.REQUEST_ADD_TO_CART, intent);
+//                Intent i = new Intent(CartActivity.this,SelectProduct.class);
+//                startActivity(i);
                 finish();
             }
         });
@@ -176,8 +182,8 @@ public class CartActivity extends BaseActivity {
                 intent.putExtra("totalAmountAC", 0.0);
                 intent.putExtra("totalItemAC", 0);
                 setResult(ActivityRequest.REQUEST_ADD_TO_CART, intent);
-                Intent i = new Intent(CartActivity.this,SelectProduct.class);
-                startActivity(i);
+
+                finish();
             }
 
 
@@ -213,9 +219,16 @@ public class CartActivity extends BaseActivity {
                 finalTotalAmount = 0.00;
                 LocalDataManager.getInstance().putDouble("TotalAmount",0.00);
                 showAmounts( totalAmount, finalTotalAmount);
-                Intent i = new Intent(CartActivity.this,SelectProduct.class);
-                startActivity(i);
-                cartList = new ArrayList<>();
+
+
+
+                Intent intent = new Intent();
+                intent.putExtra("totalAmountAC", 0.0);
+                intent.putExtra("totalItemAC", 0);
+                setResult(ActivityRequest.REQUEST_ADD_TO_CART, intent);
+
+                finish();
+
 
             }
             cartItemAdapter.notifyDataSetChanged();
@@ -233,7 +246,7 @@ public class CartActivity extends BaseActivity {
     private void showAmounts(double totalPrice, double finalTotalPrice) {
 
         activityCartBinding.textView12.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
-        tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        activityCartBinding.textView15.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
         totalPrice = totalPrice + 1.00;
         activityCartBinding.textView19.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
 
@@ -244,10 +257,10 @@ public class CartActivity extends BaseActivity {
     private void showAmounts(int qty, double totalPrice, double finalTotalPrice) {
 
         activityCartBinding.textView12.setText("Total: " + CommonUtils.formatTwoDecimal(totalPrice) + " $");
-        tvCartTotal.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        activityCartBinding.textView15.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
         LocalDataManager.getInstance().putDouble("TotalPrice",totalPrice);
         totalPrice = totalPrice + 1.00;
-        activityCartBinding.textView12.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
+        activityCartBinding.textView19.setText("$" + CommonUtils.formatTwoDecimal(totalPrice));
     }
 
 
