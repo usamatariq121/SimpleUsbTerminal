@@ -15,7 +15,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import Constants.AppConstants;
@@ -38,6 +40,18 @@ public class TestDispense extends AppCompatActivity {
             super.handleMessage(msg);
         }
     };
+    private List<countObj> arr_count ;
+
+    private Handler mHandler;
+    private boolean checkPosAll = false;
+    private int count1 = 0;
+
+    private  int posall = -1;
+    private int queueNow = 0;
+
+    private int mInterval = 3000;
+
+
 
 
     @Override
@@ -49,6 +63,7 @@ public class TestDispense extends AppCompatActivity {
 
         devPath = AppConstants.devPath;
         baudrate = AppConstants.baudRate;
+        arr_count = new ArrayList<>();
 
         clickListener();
 
@@ -61,21 +76,32 @@ public class TestDispense extends AppCompatActivity {
             public void onClick(View view) {
                 try {
 //                    int hdh = Integer.parseInt(((EditText) findViewById(R.id.hdh)).getText().toString());
-                    int hdh = Integer.parseInt(binding.etLane.getText().toString().trim());
-                    short[] hdhbyte = HexDataHelper.Int2Short16_2(hdh);
+//                    int hdh = Integer.parseInt(binding.etLane.getText().toString().trim());
+//                    short[] hdhbyte = HexDataHelper.Int2Short16_2(hdh);
+//
+//                    //货道号补齐两字节
+//                    if (hdhbyte.length == 1) {
+//                        short temp = hdhbyte[0];
+//                        hdhbyte = new short[2];
+//                        hdhbyte[0] = 0;
+//                        hdhbyte[1] = temp;
+//                    }
+//
+//
+//                    byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
+//                    data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
+//                    writeCmd(data);
 
-                    //货道号补齐两字节
-                    if (hdhbyte.length == 1) {
-                        short temp = hdhbyte[0];
-                        hdhbyte = new short[2];
-                        hdhbyte[0] = 0;
-                        hdhbyte[1] = temp;
-                    }
 
 
-                    byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
-                    data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
-                    writeCmd(data);
+                    countObj obj = new countObj();
+                   //ye position number set honay wali bus
+                    obj.setproduct(binding.etLane.getText().toString());
+                    obj.setcount(0);
+                    obj.setposition(0);
+                    arr_count.add(obj);
+
+                    setUpForDispense();
 
        
 
@@ -110,6 +136,70 @@ public class TestDispense extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                if (count1 < 2) {
+                    if (!checkPosAll) {
+                        posall = 0;
+                    } else {
+//                        yaha kuch change huga
+                        posall = arr_count.get(queueNow).getcount();
+                    }
+// yaha kuch change huga -- idr kuch change ni hoga
+                    int hdhInt = Integer.parseInt(arr_count.get(queueNow).getproduct());
+                    System.out.println("loggings-check-sent-product-" + String.valueOf(hdhInt));
+                    short[] hdhbyte = HexDataHelper.Int2Short16_2(hdhInt);
+                    if (hdhbyte.length == 1) {
+                        short temp = hdhbyte[0];
+                        hdhbyte = new short[2];
+                        hdhbyte[0] = 0;
+                        hdhbyte[1] = temp;
+                    }
+                    byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
+                    data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
+                    queue.add(data);
+                    //queueNow = arr_count.get(queueNow).getcount();
+                    //handler.removeCallbacksAndMessages(null);
+                    count1++;
+                } else {
+                    //handler11.removeCallbacksAndMessages(null);
+                    stopRepeatingTask();
+                }
+            } finally {
+                mHandler.postDelayed(mStatusChecker, mInterval);
+            }
+        }
+    };
+
+    private void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
+    }
+
+    private void setUpForDispense() {
+
+        String text = "";
+        handler.post(new RunableEx(text) {
+            public void run() {
+                runQueue();
+            }
+        });
+
+    }
+
+    private void runQueue() {
+        mHandler = new Handler();
+        checkPosAll = false;
+        startRepeatingTask();
+    }
+
+    private void startRepeatingTask() {
+        count1 = 0;
+        mStatusChecker.run();
     }
 
     //*****************************************************Binding Serial Port**************************************************************
