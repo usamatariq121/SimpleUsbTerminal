@@ -76,6 +76,9 @@ public class TestDispense extends AppCompatActivity {
                     byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
                     data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
                     writeCmd(data);
+
+       
+
                 } catch (
                         Exception e) {
 

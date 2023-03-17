@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.linkitsoft.beepvending.Activities.Dispense.TestDispense;
 import com.linkitsoft.beepvending.R;
 import com.linkitsoft.beepvending.databinding.ActivitySelectProductBinding;
 import com.linkitsoft.beepvending.databinding.ActivitySplashScreenBinding;
@@ -83,7 +84,7 @@ public class SplashScreen extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    Intent intent = new Intent(SplashScreen.this, TestDispense.class);
                     startActivity(intent);
                     finish();
                 }
