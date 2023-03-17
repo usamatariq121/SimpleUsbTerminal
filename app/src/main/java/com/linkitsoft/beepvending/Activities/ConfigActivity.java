@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.linkitsoft.beepvending.Activities.Dispense.TestDispense;
 import com.linkitsoft.beepvending.R;
 import com.linkitsoft.beepvending.databinding.ActivityConfigBinding;
 import com.linkitsoft.beepvending.databinding.ActivityMainBinding;
@@ -79,6 +80,14 @@ public class ConfigActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+
+        Binding.btnDispense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ConfigActivity.this, TestDispense.class);
+                startActivity(i);
             }
         });
 

@@ -141,6 +141,23 @@
         android:background="@drawable/btncheckoutselector"
        />
 
+    <Button
+        android:id="@+id/btnDispense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        android:padding="30dp"
+        android:paddingStart="100dp"
+        android:paddingEnd="100dp"
+        android:text="TEST DISPENSE"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout8"
+        app:layout_constraintEnd_toEndOf="@+id/kid"
+        app:layout_constraintStart_toStartOf="@+id/kid"
+        app:layout_constraintTop_toBottomOf="@+id/btnSave"
+        android:background="@drawable/btncheckoutselector"
+        />
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout8"
