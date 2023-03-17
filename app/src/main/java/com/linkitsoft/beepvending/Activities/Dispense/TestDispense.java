@@ -1,7 +1,11 @@
 package com.linkitsoft.beepvending.Activities.Dispense;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +13,7 @@ import android.serialport.SerialPort;
 import android.util.Log;
 import android.view.View;
 
+import com.linkitsoft.beepvending.Activities.MainActivity;
 import com.linkitsoft.beepvending.databinding.ActivityTestDispenseBinding;
 
 import java.io.ByteArrayOutputStream;
@@ -21,6 +26,7 @@ import java.util.List;
 import java.util.Queue;
 
 import Constants.AppConstants;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TestDispense extends AppCompatActivity {
     ActivityTestDispenseBinding binding;
@@ -50,8 +56,9 @@ public class TestDispense extends AppCompatActivity {
     private int queueNow = 0;
 
     private int mInterval = 3000;
-
-
+    private String TAG = "Dispense", LDispense = "";
+    private int product_hdhInt =-1;
+    private SweetAlertDialog sdthankyou;
 
 
     @Override
@@ -334,7 +341,11 @@ public class TestDispense extends AppCompatActivity {
     }
 
     public void proccessCmd(byte[] cmd) {
-        addText("<<" + HexDataHelper.hex2String(cmd));
+
+        if (LDispense.equalsIgnoreCase("true")) {
+            Log.i(TAG, "loggings-check-response-" + HexDataHelper.hex2String(cmd));
+        }
+        System.out.println("loggings-check-response-" + HexDataHelper.hex2String(cmd));
 
         if (0x41 == (short) (cmd[2] & 0xff)) {
             //收到POLL包
@@ -346,9 +357,149 @@ public class TestDispense extends AppCompatActivity {
             }
         } else if (0x42 == (short) (cmd[2] & 0xff)) {
             // 收到ACK
-        } else {
+            Log.d("TAG:", "ACK Received");
+//            handler11.removeCallbacksAndMessages(null);
+
+            stopRepeatingTask();
+            //writeCmd(ackBytes);
+        } else if (0x04 == (short) (cmd[2] & 0xff)) {
+            stopRepeatingTask();
             writeCmd(ackBytes);
+            //update status here
+            if (0x01 == (short) (cmd[5] & 0xff)) {
+                //dispensing
+//                handler3.removeCallbacksAndMessages(null);
+
+                int product = Integer.parseInt(String.format("%02X", cmd[7]), 16);
+                if (LDispense.equalsIgnoreCase("true")) {
+                    Log.i(TAG, "loggings-check-dispensing-product-" + String.valueOf(product));
+                }
+
+            } else if (0x02 == (short) (cmd[5] & 0xff)) {
+                //dispensed
+                queueNow = queueNow + 1;
+
+                product_hdhInt = -1;
+                for (int i = 0; i < arr_count.size(); i++) {
+                    if (posall == arr_count.get(i).getcount()) {
+                        arr_count.get(i).setposition(1);
+                        break;
+                    }
+                }
+
+                if (queueNow == arr_count.size()) {
+                    //quit
+                } else {
+                    //callquanQueue(queueNow);
+                    checkPosAll = true;
+                    //mHandler = new Handler();
+                    startRepeatingTask();
+                }
+
+                int product = Integer.parseInt(String.format("%02X", cmd[7]), 16);
+                if (LDispense.equalsIgnoreCase("true")) {
+                    Log.i(TAG, "loggings-check-dispensed-product-" + String.valueOf(product));
+                }
+                int mstatus = Integer.parseInt(String.format("%02X", cmd[5]), 16);
+                updateStatus(product, "1", mstatus);
+            } else {
+                //dispensed with no dropsensor
+                queueNow = queueNow + 1;
+
+                int product = Integer.parseInt(String.format("%02X", cmd[7]), 16);
+                product_hdhInt = -1;
+
+
+            }
         }
+    }
+
+    private void updateStatus(int product, String s, int mstatus) {
+
+        String productcode = String.valueOf(product);
+        boolean checkhere = false;
+
+        boolean check = false;
+        for (int j = 0; j < arr_count.size(); j++) {
+            System.out.println("loggings-count-" + arr_count.get(j).getposition() + "-product-" + arr_count.get(j).getproduct());
+            if (arr_count.get(j).getproduct().equalsIgnoreCase(productcode) && arr_count.get(j).getposition() != 1) {
+                check = true;
+            }
+        }
+
+        if (!check) {
+            System.out.println("loggings-countmodel"+product+ "pos" + s + "status" + mstatus);
+        }
+
+        String text = "";
+        if (checkhere) {
+            handler.post(new RunableEx(text) {
+                public void run() {
+                    // one by one updating the prducts dispense here
+//                    adapter.update(cartListModels);
+
+                    boolean checkc = false;
+                    for (int i = 0; i < arr_count.size(); i++) {
+                        if (arr_count.get(i).getposition() == 0) {
+                            checkc = true;
+                            break;
+                        }
+                    }
+                    if (!checkc) {
+                        serialPort.close();
+                        if (LDispense.equalsIgnoreCase("true")) {
+                            Log.i(TAG, "Serial port closed");
+                        }
+                        serialPort = null;
+
+                        Handler handler13 = new Handler();
+                        handler13.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                handler13.removeCallbacksAndMessages(null);
+                                Intent intent = new Intent(TestDispense.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                                if (LDispense.equalsIgnoreCase("true")) {
+                                    Log.i(TAG, "Dispensing Activity Closed");
+                                }
+                            }
+                        }, 10000);
+                        if (LDispense.equalsIgnoreCase("true")) {
+                            Log.i(TAG, "End Dispensing Activity");
+                        }
+
+
+                        //all products dispensed
+
+
+//                        updatetransactiondb(allstatuses);
+
+                        sdthankyou = new SweetAlertDialog(TestDispense.this, SweetAlertDialog.SUCCESS_TYPE)
+                                .setTitleText("Thank you.")
+                                .setContentText("Your order is dispensed please get ready to pickup.");
+                        sdthankyou.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                handler13.removeCallbacksAndMessages(null);
+                                sdthankyou.dismissWithAnimation();
+                                Intent intent = new Intent(TestDispense.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                                if (LDispense.equalsIgnoreCase("true")) {
+                                    Log.i(TAG, "Dispensing Activity Closed");
+                                }
+                            }
+                        });
+                        sdthankyou.show();
+
+                    }
+                }
+            });
+        }
+
     }
 
     public void writeCmd(byte[] cmd) {
