@@ -409,6 +409,28 @@ public class TestDispense extends AppCompatActivity {
                 int product = Integer.parseInt(String.format("%02X", cmd[7]), 16);
                 product_hdhInt = -1;
 
+//                Ajay Work:
+                for(int i=0;i<arr_count.size();i++) {
+                    if(posall==arr_count.get(i).getcount()) {
+                        arr_count.get(i).setposition(1);
+                        break;
+                    }
+                }
+
+                if(queueNow==arr_count.size()){
+                    //quit
+                }else {
+                    //callquanQueue(queueNow);
+                    checkPosAll=true;
+                    //mHandler = new Handler();
+                    startRepeatingTask();
+                }
+
+                int mstatus = Integer.parseInt(String.format("%02X", cmd[5]), 16);
+                if(LDispense.equalsIgnoreCase("true")) {
+                    Log.i(TAG, "loggings-check-dispensed-product-" + String.valueOf(product));
+                }
+                updateStatus(product, "2",mstatus);
 
             }
         }
