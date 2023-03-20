@@ -37,6 +37,9 @@ public class TestDispense extends AppCompatActivity {
     int baudrate;
     int no = 0;
     byte[] ackBytes = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x42, 0x00, 0x43};
+   // byte[] ackBytes = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x42, 0x00, 0x43};
+
+
     private ByteArrayOutputStream mBuffer = new ByteArrayOutputStream();
     Queue<byte[]> queue = new LinkedList<byte[]>();
 
@@ -78,7 +81,7 @@ public class TestDispense extends AppCompatActivity {
 
 
     private void clickListener() {
-        setUpForDispense();
+
 
         binding.btnDispense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +115,7 @@ public class TestDispense extends AppCompatActivity {
                     obj.setposition(0);
                     arr_count.add(obj);
 
-
+                    setUpForDispense();
        
 
                 } catch (
@@ -158,24 +161,41 @@ public class TestDispense extends AppCompatActivity {
                         posall = 0;
                     } else {
                     // yaha kuch change huga
-                        posall = arr_count.get(queueNow).getcount();
+                        if(queueNow <= arr_count.size()){
+                            posall = arr_count.get(queueNow).getcount();
+                        }
+
                     }
                     // yaha kuch change huga -- idr kuch change ni hoga
-                    int hdhInt = Integer.parseInt(arr_count.get(queueNow).getproduct());
-                    System.out.println("loggings-check-sent-product-" + String.valueOf(hdhInt));
-                    short[] hdhbyte = HexDataHelper.Int2Short16_2(hdhInt);
-                    if (hdhbyte.length == 1) {
-                        short temp = hdhbyte[0];
-                        hdhbyte = new short[2];
-                        hdhbyte[0] = 0;
-                        hdhbyte[1] = temp;
+                    int hdhInt;
+                    if(queueNow <= arr_count.size()){
+                        hdhInt = Integer.parseInt(arr_count.get(queueNow).getproduct());
+                        System.out.println("loggings-check-sent-product-" + String.valueOf(hdhInt));
+                        short[] hdhbyte = HexDataHelper.Int2Short16_2(hdhInt);
+                        if (hdhbyte.length == 1) {
+                            short temp = hdhbyte[0];
+                            hdhbyte = new short[2];
+                            hdhbyte[0] = 0;
+                            hdhbyte[1] = temp;
+                        }
+                        byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
+                        byte[] data1 = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x65, 0x01};
+                        data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
+//                        data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
+                        queue.add(data);
+                        queue.add(data1);
+
+
+                        count1++;
+                    }else{
+                        Log.d("dispense greate ","done");
                     }
-                    byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
-                    data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
-                    queue.add(data);
+
+
                     //queueNow = arr_count.get(queueNow).getcount();
                     //handler.removeCallbacksAndMessages(null);
-                    count1++;
+
+
                 } else {
                     //handler11.removeCallbacksAndMessages(null);
                     stopRepeatingTask();
@@ -373,6 +393,15 @@ public class TestDispense extends AppCompatActivity {
                 //dispensing
 //                handler3.removeCallbacksAndMessages(null);
 
+
+                if(0x18 == (short) (cmd[5] & 0xff)){
+                    Log.i(TAG, "push product to heat wave-" + " yes" );
+
+                }else if(0x19 == (short) (cmd[5] & 0xff)){
+                    Log.i(TAG, "push product to heat wave-" + " yes" );
+                }
+
+
                 int product = Integer.parseInt(String.format("%02X", cmd[7]), 16);
                 if (LDispense.equalsIgnoreCase("true")) {
                     Log.i(TAG, "loggings-check-dispensing-product-" + String.valueOf(product));
@@ -381,6 +410,14 @@ public class TestDispense extends AppCompatActivity {
             } else if (0x02 == (short) (cmd[5] & 0xff)) {
                 //dispensed
                 queueNow = queueNow + 1;
+
+
+                if(0x18 == (short) (cmd[5] & 0xff)){
+                    Log.i(TAG, "push product to heat wave-" + " yes" );
+
+                }else if(0x19 == (short) (cmd[5] & 0xff)){
+                    Log.i(TAG, "push product to heat wave-" + " yes" );
+                }
 
                 product_hdhInt = -1;
                 for (int i = 0; i < arr_count.size(); i++) {
@@ -408,6 +445,8 @@ public class TestDispense extends AppCompatActivity {
             } else {
                 //dispensed with no dropsensor
                 queueNow = queueNow + 1;
+
+
 
                 int product = Integer.parseInt(String.format("%02X", cmd[7]), 16);
                 product_hdhInt = -1;
@@ -457,7 +496,7 @@ public class TestDispense extends AppCompatActivity {
         }
 
         String text = "";
-        if (checkhere) {
+        if (!checkhere) {
             handler.post(new RunableEx(text) {
                 public void run() {
                     // one by one updating the prducts dispense here
