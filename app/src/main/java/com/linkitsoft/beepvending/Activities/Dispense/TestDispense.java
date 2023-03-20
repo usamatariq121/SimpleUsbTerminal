@@ -78,10 +78,14 @@ public class TestDispense extends AppCompatActivity {
 
 
     private void clickListener() {
+        setUpForDispense();
+
         binding.btnDispense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
+
+
 //                    int hdh = Integer.parseInt(((EditText) findViewById(R.id.hdh)).getText().toString());
 //                    int hdh = Integer.parseInt(binding.etLane.getText().toString().trim());
 //                    short[] hdhbyte = HexDataHelper.Int2Short16_2(hdh);
@@ -108,7 +112,6 @@ public class TestDispense extends AppCompatActivity {
                     obj.setposition(0);
                     arr_count.add(obj);
 
-                    setUpForDispense();
 
        
 
@@ -154,10 +157,10 @@ public class TestDispense extends AppCompatActivity {
                     if (!checkPosAll) {
                         posall = 0;
                     } else {
-//                        yaha kuch change huga
+                    // yaha kuch change huga
                         posall = arr_count.get(queueNow).getcount();
                     }
-// yaha kuch change huga -- idr kuch change ni hoga
+                    // yaha kuch change huga -- idr kuch change ni hoga
                     int hdhInt = Integer.parseInt(arr_count.get(queueNow).getproduct());
                     System.out.println("loggings-check-sent-product-" + String.valueOf(hdhInt));
                     short[] hdhbyte = HexDataHelper.Int2Short16_2(hdhInt);
