@@ -181,7 +181,7 @@ public class TestDispense extends AppCompatActivity {
                         byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
                         byte[] data1 = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x65, 0x01};
                         data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
-//                        data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
+                        data1[data1.length - 1] = (byte) HexDataHelper.computerXor(data1, 0, data1.length - 1);
                         queue.add(data);
                         queue.add(data1);
 
