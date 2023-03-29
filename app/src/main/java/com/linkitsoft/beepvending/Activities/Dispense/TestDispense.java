@@ -132,8 +132,8 @@ public class TestDispense extends AppCompatActivity {
                     bindSerialPort();
                 } else {
                     try {
-                        serialPort.close();
-                        serialPort = null;
+//                        serialPort.close();
+//                        serialPort = null;
                     } catch (
                             Exception e) {
                         Log.d("SerialPortException:: ", "" + e);
@@ -179,11 +179,11 @@ public class TestDispense extends AppCompatActivity {
                             hdhbyte[1] = temp;
                         }
                         byte[] data = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x06, 0x05, (byte) getNextNo(), 0x01, 0x00, (byte) hdhbyte[0], (byte) hdhbyte[1], 0x00};
-                        byte[] data1 = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x65, 0x01};
+                        byte[] data1 = new byte[]{(byte) 0xFA, (byte) 0xFB, 0x65,0x03,(byte) getNextNo(), 0x00, 0x00};
                         data[data.length - 1] = (byte) HexDataHelper.computerXor(data, 0, data.length - 1);
                         data1[data1.length - 1] = (byte) HexDataHelper.computerXor(data1, 0, data1.length - 1);
-                        queue.add(data);
                         queue.add(data1);
+                        queue.add(data);
 
 
                         count1++;
@@ -262,8 +262,8 @@ public class TestDispense extends AppCompatActivity {
                 } finally {
                     if (null != serialPort) {
                         try {
-                            serialPort.close();
-                            serialPort = null;
+//                            serialPort.close();
+//                            serialPort = null;
                         } catch (
                                 Exception e) {
                         }
@@ -386,7 +386,7 @@ public class TestDispense extends AppCompatActivity {
             stopRepeatingTask();
             //writeCmd(ackBytes);
         } else if (0x04 == (short) (cmd[2] & 0xff)) {
-            stopRepeatingTask();
+          //  stopRepeatingTask();
             writeCmd(ackBytes);
             //update status here
             if (0x01 == (short) (cmd[5] & 0xff)) {
@@ -510,26 +510,26 @@ public class TestDispense extends AppCompatActivity {
                         }
                     }
                     if (!checkc) {
-                        serialPort.close();
+//                        serialPort.close();
                         if (LDispense.equalsIgnoreCase("true")) {
                             Log.i(TAG, "Serial port closed");
                         }
                         serialPort = null;
 
-                        Handler handler13 = new Handler();
-                        handler13.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                handler13.removeCallbacksAndMessages(null);
-                                Intent intent = new Intent(TestDispense.this, MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                finish();
-                                if (LDispense.equalsIgnoreCase("true")) {
-                                    Log.i(TAG, "Dispensing Activity Closed");
-                                }
-                            }
-                        }, 10000);
+//                        Handler handler13 = new Handler();
+//                        handler13.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                handler13.removeCallbacksAndMessages(null);
+//                                Intent intent = new Intent(TestDispense.this, MainActivity.class);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                startActivity(intent);
+//                                finish();
+//                                if (LDispense.equalsIgnoreCase("true")) {
+//                                    Log.i(TAG, "Dispensing Activity Closed");
+//                                }
+//                            }
+//                        }, 10000);
                         if (LDispense.equalsIgnoreCase("true")) {
                             Log.i(TAG, "End Dispensing Activity");
                         }
@@ -540,24 +540,24 @@ public class TestDispense extends AppCompatActivity {
 
 //                        updatetransactiondb(allstatuses);
 
-                        sdthankyou = new SweetAlertDialog(TestDispense.this, SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText("Thank you.")
-                                .setContentText("Your order is dispensed please get ready to pickup.");
-                        sdthankyou.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                handler13.removeCallbacksAndMessages(null);
-                                sdthankyou.dismissWithAnimation();
-                                Intent intent = new Intent(TestDispense.this, MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(intent);
-                                finish();
-                                if (LDispense.equalsIgnoreCase("true")) {
-                                    Log.i(TAG, "Dispensing Activity Closed");
-                                }
-                            }
-                        });
-                        sdthankyou.show();
+//                        sdthankyou = new SweetAlertDialog(TestDispense.this, SweetAlertDialog.SUCCESS_TYPE)
+//                                .setTitleText("Thank you.")
+//                                .setContentText("Your order is dispensed please get ready to pickup.");
+//                        sdthankyou.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                            @Override
+//                            public void onDismiss(DialogInterface dialog) {
+//                                handler13.removeCallbacksAndMessages(null);
+//                                sdthankyou.dismissWithAnimation();
+//                                Intent intent = new Intent(TestDispense.this, MainActivity.class);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                startActivity(intent);
+//                                finish();
+//                                if (LDispense.equalsIgnoreCase("true")) {
+//                                    Log.i(TAG, "Dispensing Activity Closed");
+//                                }
+//                            }
+//                        });
+                     //   sdthankyou.show();
 
                     }
                 }
