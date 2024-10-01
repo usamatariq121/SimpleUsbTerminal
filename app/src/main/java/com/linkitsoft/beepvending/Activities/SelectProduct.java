@@ -10,6 +10,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.usb.UsbDeviceConnection;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -21,6 +23,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hoho.android.usbserial.driver.UsbSerialDriver;
+import com.hoho.android.usbserial.driver.UsbSerialPort;
+import com.hoho.android.usbserial.driver.UsbSerialProber;
+import com.hoho.android.usbserial.util.SerialInputOutputManager;
 import com.linkitsoft.beepvending.Adapters.MenuItemAdpater;
 import com.linkitsoft.beepvending.Helper.ActivityRequest;
 import com.linkitsoft.beepvending.Helper.UIHelper;
@@ -33,8 +39,11 @@ import com.linkitsoft.beepvending.databinding.ProductDetailLayoutBinding;
 import com.linkitsoft.beepvending.databinding.ReceiptlayoutBinding;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -81,6 +90,10 @@ public class SelectProduct extends BaseActivity {
 
     public static ArrayList<Product> cartList = new ArrayList<>();
 
+    private static final String TAG = "SerialCommunication";
+    private UsbSerialPort serialPort;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+
     ActivitySelectProductBinding activitySelectProductBinding;
 
 
@@ -100,42 +113,114 @@ public class SelectProduct extends BaseActivity {
                 }
             }
         });
+//
+//
+//
+//        bottom = findViewById(R.id.constraintLayout8);
+//
+//
+//        cancel = findViewById(R.id.button6);
+//        checkout = findViewById(R.id.button7);
+//        totalamt = findViewById(R.id.textView19);
+//
+//        imgCart = findViewById(R.id.cart);
+//        tvQuantity = findViewById(R.id.cartQuantity);
+//
+//        cartList = new ArrayList<>();
+//
+//
+//        clickListener();
+//
+//
+//
+//
+//
+//        productList = new ArrayList<Product>();
+//        productList.add(new Product("test", 1, false, 1, "India’s Magic Lays", 3.98,R.drawable.prod1));
+//        productList.add(new Product("test", 1, false, 2, "Heat Beat lays", 3.21,R.drawable.p5));
+//        productList.add(new Product("test", 1, false, 3, "Lays Classic ver ", 2.98,R.drawable.p6));
+//        productList.add(new Product("test", 1, false, 4, "Hot Cup Tomyum ", 1.98,R.drawable.p7));
+//
+//
+//        menuItemAdpater = new MenuItemAdpater(productList, SelectProduct.this);
+//        menuItemAdpater.setOnItemClickListener(onCartItemClickListener);
+//        activitySelectProductBinding.recproduct.setLayoutManager(new GridLayoutManager(SelectProduct.this, 3));
+//        activitySelectProductBinding.recproduct.setAdapter(menuItemAdpater);
+//        activitySelectProductBinding.recproduct.setHasFixedSize(true);
 
 
+        UsbManager usbManager = (UsbManager) getSystemService(USB_SERVICE);
+        List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(usbManager);
 
-        bottom = findViewById(R.id.constraintLayout8);
+        if (availableDrivers.isEmpty()) {
+            Log.d(TAG, "No USB device found.");
+            return;
+        }
 
+        // Get the first available driver (assuming single device connection)
+        UsbSerialDriver driver = availableDrivers.get(0);
+        UsbDeviceConnection connection = usbManager.openDevice(driver.getDevice());
 
-        cancel = findViewById(R.id.button6);
-        checkout = findViewById(R.id.button7);
-        totalamt = findViewById(R.id.textView19);
+        if (connection == null) {
+            Log.d(TAG, "Unable to open device.");
+            return;
+        }
 
-        imgCart = findViewById(R.id.cart);
-        tvQuantity = findViewById(R.id.cartQuantity);
+        // Set up the serial port
+        serialPort = driver.getPorts().get(0); // Most devices have just one port
+        try {
+            serialPort.open(connection);
+            serialPort.setParameters(9600, 8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
+            Log.d(TAG, "Serial port opened.");
+        } catch (IOException e) {
+            Log.e(TAG, "Error opening device: " + e.getMessage());
+            return;
+        }
 
-        cartList = new ArrayList<>();
+        // Start listening for data
+        startIoManager();
+        String sendCmd = "01 03 10 04 00 01 C1 0B";
+        sendCommand(sendCmd);
 
+    }
 
-        clickListener();
+    private void startIoManager() {
+        SerialInputOutputManager usbIoManager = new SerialInputOutputManager(serialPort, new SerialInputOutputManager.Listener() {
+            @Override
+            public void onNewData(byte[] data) {
+                runOnUiThread(() -> {
+                    // Handle the received data here
+                    Log.d(TAG, "Received data: " + new String(data));
+                });
+            }
 
+            @Override
+            public void onRunError(Exception e) {
+                Log.e(TAG, "Error during I/O: " + e.getMessage());
+            }
+        });
+        executor.submit(usbIoManager);
+    }
 
+    private void sendCommand(String command) {
+        if (serialPort != null) {
+            try {
+                serialPort.write(command.getBytes(), 1000);
+                Log.d(TAG, "Sent command: " + command);
+            } catch (IOException e) {
+                Log.e(TAG, "Error sending command: " + e.getMessage());
+            }
+        }
+    }
 
-
-
-        productList = new ArrayList<Product>();
-        productList.add(new Product("test", 1, false, 1, "India’s Magic Lays", 3.98,R.drawable.prod1));
-        productList.add(new Product("test", 1, false, 2, "Heat Beat lays", 3.21,R.drawable.p5));
-        productList.add(new Product("test", 1, false, 3, "Lays Classic ver ", 2.98,R.drawable.p6));
-        productList.add(new Product("test", 1, false, 4, "Hot Cup Tomyum ", 1.98,R.drawable.p7));
-
-
-        menuItemAdpater = new MenuItemAdpater(productList, SelectProduct.this);
-        menuItemAdpater.setOnItemClickListener(onCartItemClickListener);
-        activitySelectProductBinding.recproduct.setLayoutManager(new GridLayoutManager(SelectProduct.this, 3));
-        activitySelectProductBinding.recproduct.setAdapter(menuItemAdpater);
-        activitySelectProductBinding.recproduct.setHasFixedSize(true);
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            serialPort.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void clickListener() {
